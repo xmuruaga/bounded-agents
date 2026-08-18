@@ -1,0 +1,22 @@
+{
+  "compromised-no-apc": {
+    "condition": "compromised-no-apc",
+    "suite": "slack",
+    "model": "eu.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "n_tasks": 21,
+    "n_injections": 5,
+    "total_runs": 105,
+    "upr": 0.819047619047619,
+    "asr": 0.8
+  },
+  "compromised-apc": {
+    "condition": "compromised-apc",
+    "suite": "slack",
+    "model": "eu.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "n_tasks": 21,
+    "n_injections": 5,
+    "total_runs": 105,
+    "upr": 0.0,
+    "asr": 0.0
+  }
+}

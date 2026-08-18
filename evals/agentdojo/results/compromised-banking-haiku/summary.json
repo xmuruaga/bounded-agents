@@ -1,0 +1,22 @@
+{
+  "compromised-no-apc": {
+    "condition": "compromised-no-apc",
+    "suite": "banking",
+    "model": "eu.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "n_tasks": 16,
+    "n_injections": 9,
+    "total_runs": 144,
+    "upr": 0.4652777777777778,
+    "asr": 0.7777777777777778
+  },
+  "compromised-apc": {
+    "condition": "compromised-apc",
+    "suite": "banking",
+    "model": "eu.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "n_tasks": 16,
+    "n_injections": 9,
+    "total_runs": 144,
+    "upr": 0.3125,
+    "asr": 0.013888888888888888
+  }
+}

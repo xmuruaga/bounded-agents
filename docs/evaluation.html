@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bounded Agents — Evaluation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fafafa;
+  --white: #fff;
+  --g50: #f8fafc;
+  --g100: #f1f5f9;
+  --g200: #e2e8f0;
+  --g300: #cbd5e1;
+  --g400: #94a3b8;
+  --g500: #64748b;
+  --g600: #475569;
+  --g700: #334155;
+  --g800: #1e293b;
+  --g900: #0f172a;
+  --accent: #1a1a2e;
+  --accent-teal: #0d7377;
+  --gn: #2d6a4f;
+  --gn50: #f5f8f7;
+  --gn100: #e8efec;
+  --rd: #8b5e5e;
+  --rd50: #f8f5f5;
+  --rd100: #ede8e8;
+  --am: #8b7340;
+  --am50: #f8f7f4;
+  --am100: #edeadf;
+  --vi: #6b6399;
+  --vi50: #f6f5f9;
+  --vi100: #eceaf3;
+  --bl: #5a6f99;
+  --bl50: #f5f6f9;
+  --bl100: #e8ebf2;
+  --mono: 'JetBrains Mono', monospace;
+  --sans: 'Inter', -apple-system, system-ui, sans-serif;
+  --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--sans);
+  background: #fafaf9;
+  color: var(--g900);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Top bar */
+.top {
+  height: 52px;
+  background: var(--white);
+  border-bottom: 1px solid var(--g100);
+  display: flex;
+  align-items: center;
+  padding: 0 40px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.top .brand { display: flex; align-items: center; gap: 8px; }
+.top .bname { font: 600 15px var(--sans); color: var(--g900); letter-spacing: -.2px; }
+.top-nav { display: flex; align-items: center; gap: 2px; margin-left: auto; }
+.top-nav-item {
+  font: 500 13px var(--sans);
+  color: var(--g400);
+  text-decoration: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: color .15s, background .15s;
+}
+.top-nav-item:hover { color: var(--g700); background: var(--g50); }
+.top-nav-item.active { color: var(--g900); background: var(--g100); }
+
+.container { max-width: 1060px; margin: 0 auto; padding: 32px 40px 60px; }
+
+/* Hero */
+.hero { text-align: left; padding: 48px 0 24px; margin-bottom: 32px; }
+.hero h2 { font: 700 36px/1.15 var(--serif); color: var(--g900); letter-spacing: -.5px; margin-bottom: 16px; }
+.hero p { font: 400 18px/1.75 var(--serif); color: var(--g500); }
+
+/* KPI strip */
+.kpi-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--g100); border-radius: 8px; overflow: hidden; margin-bottom: 36px; }
+.kpi { background: var(--white); padding: 20px; text-align: center; }
+.kpi-label { font: 500 9px var(--mono); color: var(--g400); text-transform: uppercase; letter-spacing: .6px; margin-bottom: 8px; }
+.kpi-value { font: 700 28px var(--sans); letter-spacing: -.8px; line-height: 1; margin-bottom: 4px; }
+.kpi-desc { font: 400 11px var(--sans); color: var(--g500); }
+
+/* Benchmark section — clean, minimal borders */
+.bench { background: transparent; border: none; border-radius: 0; margin-bottom: 40px; overflow: visible; border-top: 1px solid var(--g200); padding-top: 28px; }
+.bench-header { padding: 0 0 16px; border-bottom: none; }
+.bench-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; }
+.bench-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: var(--g50); border: none; }
+.bench-title-block { flex: 1; }
+.bench-name { font: 600 18px var(--sans); color: var(--g900); letter-spacing: -.3px; margin-bottom: 2px; }
+.bench-source { font: 400 13px var(--sans); color: var(--g400); }
+.bench-source a { color: var(--g500); text-decoration: none; border-bottom: 1px dashed var(--g300); }
+.bench-source a:hover { color: var(--g900); border-bottom-color: var(--g500); }
+.bench-badge { font: 500 12px var(--mono); padding: 4px 10px; border-radius: 6px; flex-shrink: 0; letter-spacing: .3px; background: var(--g50); color: var(--g500); border: none; }
+.bench-desc { font: 400 16px var(--serif); color: var(--g600); line-height: 1.7; margin-top: 4px; }
+.bench-desc strong { color: var(--g800); font-weight: 600; }
+.bench-body { padding: 20px 0; }
+
+/* Result cards — minimal */
+.result-grid { display: grid; gap: 16px; }
+.result-grid.c3 { grid-template-columns: repeat(3, 1fr); }
+.result-grid.c2 { grid-template-columns: repeat(2, 1fr); }
+.result-card { background: var(--g50); border: none; border-radius: 8px; padding: 20px; }
+.result-card.primary { background: var(--g50); }
+.result-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.result-card-label { font: 600 10px var(--mono); text-transform: uppercase; letter-spacing: .4px; color: var(--g400); }
+.result-card.primary .result-card-label { color: var(--gn); }
+
+.metric { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+.metric + .metric { border-top: 1px solid rgba(0,0,0,.04); }
+.result-card.primary .metric + .metric { border-top-color: rgba(16,185,129,.1); }
+.metric-name { font: 400 13px var(--sans); color: var(--g600); }
+.metric-val { font: 600 13px var(--sans); }
+
+/* Tags — typographic, not colorful */
+.tag { display: inline-flex; align-items: center; gap: 0; padding: 2px 8px; border-radius: 4px; font: 600 12px var(--mono); letter-spacing: .1px; border: none; background: transparent; }
+.tag::before { display: none; }
+.tag.gn { color: var(--g900); }
+.tag.rd { color: var(--g400); }
+.tag.am { color: var(--g500); }
+.tag.vi { color: var(--vi); }
+.tag.bl { color: var(--bl); }
+
+/* Progress bar — neutral */
+.progress { height: 3px; background: var(--g100); border-radius: 2px; overflow: hidden; margin-top: 10px; }
+.progress-fill { height: 100%; border-radius: 2px; transition: width .8s ease; background: var(--g800); }
+
+/* Coverage */
+.coverage-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+.cov-card { background: transparent; border: 1px solid var(--g100); border-radius: 8px; padding: 16px; text-align: center; }
+.cov-name { font: 500 11px var(--mono); color: var(--g500); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 10px; }
+.cov-value { font: 700 22px var(--sans); letter-spacing: -.5px; margin-bottom: 2px; }
+.cov-total { font: 400 11px var(--sans); color: var(--g400); margin-bottom: 8px; }
+
+/* Expandable detail — subtle */
+.detail-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 12px 0;
+  border-top: none;
+  font: 500 13px var(--sans);
+  color: var(--g400);
+  cursor: pointer;
+  transition: color .15s;
+  user-select: none;
+}
+.detail-toggle:hover { color: var(--g600); }
+.detail-toggle svg { transition: transform .2s; }
+.detail-toggle.open svg { transform: rotate(180deg); }
+.detail-panel {
+  display: none;
+  border-top: 1px solid var(--g100);
+  padding: 18px 0;
+  background: transparent;
+}
+.detail-panel.open { display: block; }
+
+/* Detail table */
+.dtable { width: 100%; border-collapse: collapse; font-size: 12px; }
+.dtable th {
+  font: 600 9px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--g400);
+  padding: 8px 10px;
+  text-align: left;
+  border-bottom: 1px solid var(--g200);
+}
+.dtable td {
+  padding: 7px 10px;
+  color: var(--g700);
+  border-bottom: 1px solid var(--g100);
+  font: 400 12px var(--sans);
+}
+.dtable tbody tr:last-child td { border-bottom: none; }
+.dtable tbody tr:hover { background: var(--white); }
+.dtable .mono { font-family: var(--mono); font-size: 11px; }
+
+/* Mini bar for detail tables */
+.mini-bar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.mini-bar-track {
+  width: 48px;
+  height: 4px;
+  background: var(--g200);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mini-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+}
+/* Expandable category rows */
+/* Miller columns explorer */
+.miller {
+  display: grid;
+  grid-template-columns: 240px 1fr 1fr;
+  height: 420px;
+  border: 1px solid var(--g200);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--white);
+}
+.miller-col {
+  overflow-y: auto;
+  border-right: 1px solid var(--g200);
+}
+.miller-col:last-child { border-right: none; }
+.miller-col-header {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 14px;
+  background: var(--g50);
+  border-bottom: 1px solid var(--g200);
+  font: 600 9px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--g400);
+}
+.miller-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--g300);
+  font: 400 12px var(--sans);
+}
+
+/* Category rows (col 1) */
+.mc-cat {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--g100);
+  cursor: pointer;
+  transition: background .1s;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.mc-cat:hover { background: var(--g50); }
+.mc-cat.active { background: var(--bl50); border-right: 2px solid var(--bl); }
+.mc-cat-name { font: 500 12px var(--sans); color: var(--g700); }
+.mc-cat-count { font: 400 10px var(--mono); color: var(--g400); }
+
+/* Case rows (col 2) */
+.mc-case {
+  padding: 6px 14px;
+  border-bottom: 1px solid var(--g50);
+  cursor: pointer;
+  transition: background .1s;
+}
+.mc-case:hover { background: var(--g50); }
+.mc-case.active { background: var(--bl50); border-right: 2px solid var(--bl); }
+.mc-case-tool { font: 500 11px var(--mono); color: var(--g700); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mc-case-chain { font: 400 9px var(--mono); color: var(--g400); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mc-case-meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; font: 400 10px var(--sans); }
+
+/* Step detail (col 3) — timeline */
+.mc-step {
+  padding: 12px 14px 12px 44px;
+  border-bottom: 1px solid var(--g100);
+  position: relative;
+}
+.mc-step::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 1.5px;
+  background: var(--g100);
+}
+.mc-step:first-of-type::before { top: 50%; }
+.mc-step:last-of-type::before { bottom: 50%; }
+.mc-step-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  position: relative;
+}
+.mc-step-num {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 700 10px var(--mono);
+  flex-shrink: 0;
+  position: absolute;
+  left: -30px;
+  z-index: 1;
+}
+.mc-step-num.ok { background: var(--gn50); color: var(--gn); }
+.mc-step-num.no { background: var(--rd50); color: var(--rd); }
+.mc-step-tool { font: 500 12px var(--sans); color: var(--g800); }
+.mc-step-action { font: 400 10px var(--mono); color: var(--g400); }
+.mc-step-badge { font: 600 10px var(--mono); margin-left: auto; }
+.mc-conds {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+}
+.mc-cond {
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 5px;
+  font: 500 9px var(--mono);
+  border: none;
+  background: var(--g50);
+  color: var(--g400);
+}
+.mc-cond.pass { background: var(--gn50); color: var(--gn); }
+.mc-cond.fail { background: var(--rd50); color: var(--rd); }
+
+@media (max-width: 900px) {
+  .miller { grid-template-columns: 200px 1fr; height: 360px; }
+  .miller-col:nth-child(3) { display: none; }
+}
+@media (max-width: 600px) {
+  .miller { grid-template-columns: 1fr; height: 300px; }
+  .miller-col:nth-child(2), .miller-col:nth-child(3) { display: none; }
+}
+
+.footnote { font: 400 13px var(--sans); color: var(--g400); margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--g200); line-height: 1.6; }
+
+/* Tooltip trigger */
+.tip { cursor: help; border-bottom: 1px dotted var(--g300); }
+
+/* Global tooltip */
+#tooltip {
+  display: none;
+  position: fixed;
+  width: 300px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--g700);
+  font: 400 12px/1.6 var(--sans);
+  text-align: left;
+  box-shadow: 0 8px 30px rgba(0,0,0,.14), 0 0 0 1px var(--g200);
+  z-index: 99999;
+  pointer-events: none;
+}
+#tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--white);
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.08));
+}
+#tooltip.flip::after {
+  top: auto;
+  bottom: 100%;
+  border-top-color: transparent;
+  border-bottom-color: var(--white);
+}
+
+@media (max-width: 800px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+  .result-grid.c3 { grid-template-columns: 1fr; }
+  .result-grid.c2 { grid-template-columns: 1fr; }
+  .coverage-grid { grid-template-columns: repeat(3, 1fr); }
+  .container { padding: 20px 16px 40px; }
+}
+@media (max-width: 500px) {
+  .kpi-row { grid-template-columns: 1fr 1fr; }
+  .coverage-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* Editorial prose — full width of container */
+.prose {
+  font: 400 17px/1.85 var(--serif);
+  color: var(--g700);
+  margin-bottom: 28px;
+}
+.prose p + p { margin-top: 14px; }
+.prose strong { color: var(--g900); font-weight: 600; }
+.prose em { font-style: italic; }
+
+/* Section headings — real weight */
+.section-label {
+  font: 700 22px var(--serif);
+  color: var(--g900);
+  margin: 56px 0 8px;
+  letter-spacing: -.3px;
+}
+.section-sublabel {
+  font: 400 15px var(--serif);
+  color: var(--g500);
+  margin-bottom: 24px;
+}
+
+/* Callout bars — subtle */
+.callout-bar {
+  margin: 28px 0 24px;
+  padding: 18px 24px;
+  border-radius: 4px;
+  font: 400 16px/1.75 var(--serif);
+  color: var(--g600);
+}
+.callout-bar strong { color: var(--g800); font-weight: 600; }
+.callout-bar.blue { background: var(--g50); border-left: 3px solid var(--g300); }
+.callout-bar.red { background: var(--g50); border-left: 3px solid var(--g400); }
+.callout-bar.green { background: var(--gn50); border-left: 3px solid var(--gn); }
+
+/* Two-column result grid for editorial feel */
+.result-grid.c2 { grid-template-columns: repeat(2, 1fr); }
+.result-grid.c3 { grid-template-columns: repeat(3, 1fr); }
+
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="brand"><div class="bname">Bounded Agents</div></div>
+  <nav class="top-nav">
+    <a href="demo.html" class="top-nav-item">Interactive Demo</a>
+    <a href="evaluation.html" class="top-nav-item active">Evaluation</a>
+    <a href="https://github.com/xmuruaga/bounded-agents" class="top-nav-item">Paper &amp; Code <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-1px;margin-left:2px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>
+  </nav>
+</div>
+
+<div class="container">
+
+<div class="hero">
+  <h2>Evaluating APC: Security Guarantees Independent of Model Robustness</h2>
+  <p>Empirical evaluation of the Agentic Principal Chain enforcement layer across six benchmarks, four AgentDojo domains, and 3,154 evaluation instances — including a compromised-model evaluation that simulates full model compromise by injecting the benchmark's ground-truth attack call into a live LLM pipeline.</p>
+  <p style="margin-top:12px"><a href="https://arxiv.org/abs/2608.15888" target="_blank" rel="noopener" style="color:var(--g800);text-decoration:underline;text-underline-offset:2px;font-weight:600">Paper: arXiv:2608.15888</a> · <a href="https://github.com/xmuruaga/bounded-agents" target="_blank" rel="noopener" style="color:var(--g800);text-decoration:underline;text-underline-offset:2px;font-weight:600">Code &amp; evaluation artifact</a></p>
+</div>
+
+<!-- Narrative intro -->
+<div class="prose">
+  <p>This page presents the empirical evaluation of the <strong>Agentic Principal Chain (APC)</strong> framework, introduced in <a href="https://arxiv.org/abs/2608.15888" style="color:var(--g800);text-decoration:underline;text-underline-offset:2px">Bounded Agents: Delegation Security for Multi-Agent AI Systems</a> (arXiv:2608.15888). APC evaluates every tool call against six deterministic conditions — checked by infrastructure outside the model runtime — before allowing execution. It addresses threats identified by the OWASP Top 10 for Agentic Applications <a href="#ref-1" style="color:var(--g800);text-decoration:none"><sup>[1]</sup></a>, CSA MAESTRO <a href="#ref-2" style="color:var(--g800);text-decoration:none"><sup>[2]</sup></a>, and AIUC-1 <a href="#ref-3" style="color:var(--g800);text-decoration:none"><sup>[3]</sup></a>.</p>
+  <p>Frontier models resist known prompt injection benchmarks — but the Gray Swan IPI Arena <a href="#ref-4" style="color:var(--g800);text-decoration:none"><sup>[4]</sup></a> demonstrated that all 13 frontier models remain vulnerable to adaptive human attacks, with attack success rates ranging from 0.5% to 8.5%. Anthropic's own system card reports 17.8% single-attempt ASR for Claude Opus 4.6 against GUI-based agents. The TRAP benchmark <a href="#ref-8" style="color:var(--g800);text-decoration:none"><sup>[8]</sup></a> reports 13–43% ASR across six frontier models. For prohibited compositions covered by the effective restriction set, APC enforces the decision outside the model; Composition Soundness assumes completeness of that set and serialized admission.</p>
+  <p>The evaluation is structured in three layers. <strong>Live agent evaluation</strong> (AgentDojo <a href="#ref-7" style="color:var(--g800);text-decoration:none"><sup>[7]</sup></a>) measures utility preservation with real agents and includes a <strong>compromised-model evaluation</strong> across four domains (workspace, banking, travel, slack) that simulates full model compromise: the benchmark's ground-truth attack call is appended after the first legitimate tool call. <strong>Static benchmarks</strong> (InjecAgent <a href="#ref-5" style="color:var(--g800);text-decoration:none"><sup>[5]</sup></a>, ASB <a href="#ref-6" style="color:var(--g800);text-decoration:none"><sup>[6]</sup></a>) validate composition closure across 1,454 attack scenarios. <strong>Adversarial benchmarks</strong> validate robustness against an APC-aware attacker and damage containment across multi-agent delegation chains. The AgentDojo utility and compromised-model cohorts are drawn from the same task–injection space and are not disjoint.</p>
+</div>
+
+<!-- Key results — editorial table -->
+<table style="width:100%;border-collapse:collapse;margin:0 0 32px;font:400 14px var(--sans)">
+  <tr style="border-bottom:2px solid var(--g200)">
+    <td style="padding:10px 0;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--g400)">Metric</td>
+    <td style="padding:10px 16px;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--g400);text-align:right">Result</td>
+    <td style="padding:10px 0 10px 16px;font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.5px;color:var(--g400)">Source</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--g100)">
+    <td style="padding:10px 0;color:var(--g700)">Exfiltration ASR (with APC) ↓</td>
+    <td style="padding:10px 16px;text-align:right;font:700 16px var(--sans);color:var(--g900)">0%</td>
+    <td style="padding:10px 0 10px 16px;color:var(--g400);font-size:13px">InjecAgent · ASB · Compromised-model (4 suites)</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--g100)">
+    <td style="padding:10px 0;color:var(--g700)">Destruction ASR (with APC) ↓</td>
+    <td style="padding:10px 16px;text-align:right;font:700 16px var(--sans);color:var(--g900)">4.0%</td>
+    <td style="padding:10px 0 10px 16px;color:var(--g400);font-size:13px">Aggregated · worst case 5% (workspace)</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--g100)">
+    <td style="padding:10px 0;color:var(--g700)">Manipulation ASR (with APC) ↓</td>
+    <td style="padding:10px 16px;text-align:right;font:700 16px var(--sans);color:var(--g900)">12.1%</td>
+    <td style="padding:10px 0 10px 16px;color:var(--g400);font-size:13px">Aggregated (14/116 runs) · worst case 30% (workspace)</td>
+  </tr>
+  <tr style="border-bottom:1px solid var(--g100)">
+    <td style="padding:10px 0;color:var(--g700)">Adaptive attack ASR (with APC) ↓</td>
+    <td style="padding:10px 16px;text-align:right;font:700 16px var(--sans);color:var(--g900)">0%</td>
+    <td style="padding:10px 0 10px 16px;color:var(--g400);font-size:13px">23 named attacks · 43 variants · APC-aware adversary</td>
+  </tr>
+  <tr>
+    <td style="padding:10px 0;color:var(--g700)">Enforcement overhead ↓</td>
+    <td style="padding:10px 16px;text-align:right;font:700 16px var(--sans);color:var(--g700)">&lt;0.5ms</td>
+    <td style="padding:10px 0 10px 16px;color:var(--g400);font-size:13px">p99 latency · 7,000+ evals/sec</td>
+  </tr>
+</table>
+
+<!-- Narrative: How to read this evaluation -->
+
+<div class="section-label">Live Agent Evaluation</div>
+<div class="section-sublabel">Utility preservation and compromised-model enforcement with real LLM agents</div>
+
+<!-- AgentDojo: Utility Preservation -->
+<div class="bench">
+  <div class="bench-header">
+    <div class="bench-top">
+      <div class="bench-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16.5h10"/></svg></div>
+      <div class="bench-title-block">
+        <div class="bench-name">AgentDojo — Utility (4 suites)</div>
+        <div class="bench-source">Debenedetti et al. (2024) · <a href="https://arxiv.org/abs/2406.13352" target="_blank">arXiv:2406.13352</a> · Claude Sonnet 4.6</div>
+      </div>
+      <div class="bench-badge">949 runs × 3 conditions</div>
+    </div>
+    <div class="bench-desc">
+      Does APC degrade legitimate agent performance? Evaluated across <strong>4 domains</strong> (workspace, banking, travel, slack) under three conditions: baseline (no APC), strict (all conditions enforced), and interactive (human approval simulated for C4-only denials).
+    </div>
+  </div>
+  <div class="bench-body">
+    <!-- Per-suite table -->
+    <table style="width:100%;border-collapse:collapse;font:400 13px var(--sans);margin-bottom:16px">
+      <tr style="border-bottom:2px solid var(--g200)">
+        <td style="padding:8px 0;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.4px;color:var(--g400)">Suite</td>
+        <td style="padding:8px 8px;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.4px;color:var(--g400);text-align:right">Baseline</td>
+        <td style="padding:8px 8px;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.4px;color:var(--g400);text-align:right">Strict</td>
+        <td style="padding:8px 8px;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.4px;color:var(--g400);text-align:right">Interactive</td>
+        <td style="padding:8px 8px;font:600 10px var(--mono);text-transform:uppercase;letter-spacing:.4px;color:var(--g400);text-align:right">Δ interactive</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--g100)">
+        <td style="padding:8px 0;color:var(--g700)">Workspace <span style="color:var(--g400);font-size:11px">(560)</span></td>
+        <td style="padding:8px 8px;text-align:right;color:var(--g500)">96.2%</td>
+        <td style="padding:8px 8px;text-align:right;color:var(--g500)">81.5%</td>
+        <td style="padding:8px 8px;text-align:right;font-weight:600;color:var(--g900)">86.7%</td>
+        <td style="padding:8px 8px;text-align:right;color:var(--am)">−9.6%</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--g100)">
+        <td style="padding:8px 0;color:var(--g700)">Banking <span style="color:var(--g400);font-size:11px">(144)</span></td>
+        <td style="padding:8px 8px;text-align:right;color:var(--g500)">68.8%</td>
+        <td style="padding:8px 8px;text-align:right;color:var(--g500)">50.0%</td>
+        <td style="padding:8px 8px;text-align:right;font-weight:600;color:var(--g900)">58.8%</td>
+        <td style="padding:8px 8px;text-align:right;color:var(--am)">−10.0%</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--g100)">
+        <td style="padding:8px 0;color:var(--g700)">Travel <span style="color:var(--g400);font-size:11px">(140)</span></td>
+        <td style="padding:8px 8px;text-align:right;color:var(--g500)">59.8%</td>
+        <td style="padding:8px 8px;text-align:right;color:var(--g500)">55.7%</td>
+        <td style="padding:8px 8px;text-align:right;font-weight:600;color:var(--g900)">60.0%</td>
+        <td style="padding:8px 8px;text-align:right;color:var(--gn)">+0.2%</td>
+      </tr>
+      <tr style="border-bottom:1px solid var(--g100)">
+        <td style="padding:8px 0;color:var(--g700)">Slack <span style="color:var(--g400);font-size:11px">(105)</span></td>
+        <td style="padding:8px 8px;text-align:right;color:var(--g500)">73.0%</td>
+        <td style="padding:8px 8px;text-align:right;color:var(--g500)">56.5%</td>
+        <td style="padding:8px 8px;text-align:right;font-weight:600;color:var(--g900)">60.0%</td>
+        <td style="padding:8px 8px;text-align:right;color:var(--am)">−13.0%</td>
+      </tr>
+    </table>
+  </div>
+  <div style="padding:16px 0;border-top:1px solid var(--g100);font:400 15px/1.7 var(--serif);color:var(--g500)">
+    Utility cost varies by domain. The <em>strict</em> condition enforces all six APC conditions including approval gating (C4). The <em>interactive</em> condition simulates human approval for C4-only denials, leaving composition closure (C2b), intent binding (C6), and all other conditions fully enforced. The gap between strict and interactive therefore isolates the cost of approval gating — a deployment-time UX decision recoverable with interactive confirmation. The gap between interactive and baseline reflects the genuine mechanism cost of composition closure and intent enforcement. The aggregated interactive delta is −8.6 pp across 949 task–injection pairs (mean over 3 independent runs). Travel shows the lowest structural cost (+0.2%), while slack shows the highest (−13.0%), reflecting tasks requiring action sequences indistinguishable from prohibited patterns at the action-type level. Baseline variation (60–96%) reflects AgentDojo task difficulty, not APC enforcement.
+  </div>
+  <div class="detail-toggle" onclick="toggleDetail(this)">
+    Explore by domain and task
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="detail-panel">
+    <div class="miller" id="adu-miller">
+      <div class="miller-col" id="adu-col1"></div>
+      <div class="miller-col" id="adu-col2"><div class="miller-empty">Select a category</div></div>
+      <div class="miller-col" id="adu-col3"><div class="miller-empty">Select a task</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- AgentDojo: Compromised-Model -->
+<div class="bench">
+  <div class="bench-header">
+    <div class="bench-top">
+      <div class="bench-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16.5h10"/></svg></div>
+      <div class="bench-title-block">
+        <div class="bench-name">AgentDojo — Compromised-Model</div>
+        <div class="bench-source">Ground-truth injection · Claude Haiku 4.5 · 4 suites · IPI Arena <a href="#ref-4" style="color:var(--g600);text-decoration:none"><sup>[4]</sup></a> threat model</div>
+      </div>
+      <div class="bench-badge">1,218 runs</div>
+    </div>
+    <div class="bench-desc">
+      Frontier models resist AgentDojo's built-in attacks — both Sonnet 4.6 and Haiku 4.5 achieve 0% ASR on those. But the IPI Arena <a href="#ref-4" style="color:var(--g800);text-decoration:none"><sup>[4]</sup></a> showed all 13 frontier models fall to adaptive human attacks (0.5–8.5% ASR). To evaluate APC independently of model robustness, the ground-truth attack tool call is appended after the first legitimate tool call across all four AgentDojo domains (Claude Haiku 4.5, 1,218 runs) — simulating a fully compromised model. <strong>Exfiltration blocked at 0% in all domains.</strong>
+    </div>
+  </div>
+  <div class="bench-body">
+    <!-- ASR by domain — full width like utility -->
+    <div class="result-grid c2">
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rd)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="4" y1="4" x2="20" y2="20"/></svg></div>
+          <div class="result-card-label">No Defense</div>
+        </div>
+        <div class="metric"><span class="metric-name">Workspace <span style="color:var(--g400);font-size:11px">(240 runs)</span></span><span class="tag rd">77.5%</span></div>
+        <div class="metric"><span class="metric-name">Banking <span style="color:var(--g400);font-size:11px">(144 runs)</span></span><span class="tag rd">77.8%</span></div>
+        <div class="metric"><span class="metric-name">Travel <span style="color:var(--g400);font-size:11px">(120 runs)</span></span><span class="tag rd">88.3%</span></div>
+        <div class="metric"><span class="metric-name">Slack <span style="color:var(--g400);font-size:11px">(105 runs)</span></span><span class="tag rd">80.0%</span></div>
+      </div>
+      <div class="result-card primary">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+          <div class="result-card-label">APC Result</div>
+        </div>
+        <div class="metric"><span class="metric-name">Workspace</span><span class="tag am">6.7%</span></div>
+        <div class="metric"><span class="metric-name">Banking</span><span class="tag gn">1.4%</span></div>
+        <div class="metric"><span class="metric-name">Travel</span><span class="tag gn">0.0%</span></div>
+        <div class="metric"><span class="metric-name">Slack</span><span class="tag gn">0.0%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:24px 0">
+    <img src="chart-compromised-domain.svg" alt="ASR by domain" style="width:100%;max-width:520px;display:block;margin:0 auto">
+  </div>
+
+  <!-- ASR by attack type — full width with No Defense vs APC -->
+  <div class="bench-body" style="border-top:1px solid var(--g100);margin-top:16px">
+    <div style="font:600 13px var(--sans);color:var(--g800);margin-bottom:12px">By attack type (all suites combined)</div>
+    <div class="result-grid c2">
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rd)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="4" y1="4" x2="20" y2="20"/></svg></div>
+          <div class="result-card-label">No Defense</div>
+        </div>
+        <div class="metric"><span class="metric-name">Exfiltration <span style="color:var(--g400);font-size:11px">(355 runs)</span></span><span class="tag rd">87.0%</span></div>
+        <div class="metric"><span class="metric-name">Destruction <span style="color:var(--g400);font-size:11px">(101 runs)</span></span><span class="tag rd">38.6%</span></div>
+        <div class="metric"><span class="metric-name">Manipulation <span style="color:var(--g400);font-size:11px">(116 runs)</span></span><span class="tag rd">90.5%</span></div>
+      </div>
+      <div class="result-card primary">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+          <div class="result-card-label">APC Result</div>
+        </div>
+        <div class="metric"><span class="metric-name">Exfiltration</span><span class="tag gn">0.0%</span></div>
+        <div class="metric"><span class="metric-name">Destruction</span><span class="tag gn">4.0%</span></div>
+        <div class="metric"><span class="metric-name">Manipulation</span><span class="tag am">12.1%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:24px 0">
+    <img src="chart-compromised-type.svg" alt="ASR by attack type" style="width:100%;max-width:520px;display:block;margin:0 auto">
+  </div>
+  <div style="padding:16px 0;border-top:1px solid var(--g100);font:400 15px/1.7 var(--serif);color:var(--g500)">
+    Exfiltration is blocked at 0% ASR across all four domains by composition closure — a guarantee independent of configuration. Across all four domains, 18 of 609 compromised-model runs succeed (3.0% aggregated ASR). The residual taxonomy concentrates in two categories: <em>intent overlap</em> (14 cases, 78%) — <code>create_calendar_event</code> (12 cases) and <code>update_scheduled_transaction</code> (2 cases) pass when the attack action class matches the user task's declared intent — and <em>missing composition pair</em> (4 cases, 22%) — <code>delete_file</code> with (read, delete) not in the restriction set. The residual ASR in workspace (6.7%) and banking (1.4%) comes from manipulation attacks where the injected action falls within the user's declared intent: <code>create_calendar_event</code> passes when the user task involves calendar writes (12/40 workspace tasks), and <code>update_scheduled_transaction</code> passes when the user task involves transaction updates (2/16 banking tasks). Travel and slack have 0% because no user task's intent overlaps with the attack actions. This indicates the design boundary is structural: parameter-level validation is needed to distinguish "create event for user" from "create event for attacker."
+  </div>
+  <div class="detail-toggle" onclick="toggleDetail(this)">
+    Explore scenarios
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="detail-panel">
+    <div class="miller" id="adc-miller">
+      <div class="miller-col" id="adc-col1"></div>
+      <div class="miller-col" id="adc-col2"><div class="miller-empty">Select a category</div></div>
+      <div class="miller-col" id="adc-col3"><div class="miller-empty">Select a case</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div style="font:400 15px/1.7 var(--serif);color:var(--g500);margin:32px 0 8px">
+  AgentDojo runs live agents with real tools. The next question: do APC's composition restrictions generalize across attack patterns? InjecAgent and ASB evaluate this as a pure policy check — no LLM needed.
+</div>
+
+<div class="section-label">Composition Closure</div>
+<div class="section-sublabel">Static evaluation across 1,454 attack scenarios on two public benchmarks</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="bench">
+  <div class="bench-header">
+    <div class="bench-top">
+      <div class="bench-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16.5h10"/></svg></div>
+      <div class="bench-title-block">
+        <div class="bench-name">InjecAgent</div>
+        <div class="bench-source">Zhan et al. (2024) · <a href="https://arxiv.org/abs/2403.02691" target="_blank">arXiv:2403.02691</a> · <a href="https://github.com/uiuc-kang-lab/InjecAgent" target="_blank">GitHub</a></div>
+      </div>
+      <div class="bench-badge">1,054 cases</div>
+    </div>
+    <div class="bench-desc">
+      Benchmark for indirect prompt injection in tool-integrated LLM agents. 1,054 test cases covering <strong>17 user tools</strong> and <strong>62 attacker tools</strong>, split into 544 data stealing (read→exfiltrate chains) and 510 direct harm (single malicious actions). We evaluate APC's composition closure as a pure policy check — no LLM needed.
+    </div>
+  </div>
+  <div class="bench-body">
+    <div class="result-grid c3">
+
+      <!-- Baseline -->
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rd)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="4" y1="4" x2="20" y2="20"/></svg></div>
+          <div class="result-card-label">No Defense</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Attack Success Rate for data exfiltration attacks (read→send chains). Percentage of attacks that successfully extracted confidential data.">Data Stealing ASR</span>
+          <span class="tag rd">100%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Attack Success Rate for single-action harmful operations (e.g., delete, overwrite). Percentage of attacks that executed the malicious action.">Direct Harm ASR</span>
+          <span class="tag rd">100%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--g400)">0 / 1,054</span>
+        </div>
+      </div>
+
+      <!-- APC Complete -->
+      <div class="result-card primary">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+          <div class="result-card-label">APC Result</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="All 544 exfiltration attacks blocked. Every read→send chain is caught by composition closure — the pair (read, send_external) is prohibited.">Data Stealing ASR</span>
+          <span class="tag gn">0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="60.4% of single-action attacks still pass because the user's own tool is non-sensitive (no composition violation to detect). APC blocks actions based on scope and composition, not intent — parameter-level validation is needed for these cases (future work).">Direct Harm ASR</span>
+          <span class="tag am">60.4%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="746 of 1,054 total attacks denied by the APC policy. All data stealing blocked; 39.6% of direct harm blocked where the user tool reads sensitive data.">Blocked</span>
+          <span class="metric-val" style="color:var(--gn)">746 / 1,054</span>
+        </div>
+        <div class="progress">
+          <div class="progress-fill" style="width:70.8%;background:var(--gn)"></div>
+        </div>
+      </div>
+
+      <!-- APC Incomplete -->
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--am)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="result-card-label tip" data-tip="What happens when the restriction rules is deliberately incomplete — key prohibited pairs are removed. This validates the completeness caveat: composition soundness is only as strong as the policy you configure. Like a firewall with missing rules.">Stress Test (APC rules removed)</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="With the key pair (read, send_external) removed from the restriction rules, 39.9% of exfiltration attacks succeed again. The rules must be complete to provide the guarantee.">Data Stealing ASR</span>
+          <span class="tag am">39.9%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Without complete restrictions, 82% of direct harm attacks pass. The incomplete policy catches fewer composition violations.">Direct Harm ASR</span>
+          <span class="tag rd">82.0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--am)">419 / 1,054</span>
+        </div>
+        <div class="progress">
+          <div class="progress-fill" style="width:39.8%;background:var(--am)"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div style="padding:16px 0;border-top:1px solid var(--g100);font:400 15px/1.7 var(--serif);color:var(--g500)">
+    Data stealing (0%) uses a two-step pattern: read confidential data, then send it out. APC blocks every case because the pair (read → send) is a prohibited rule — the agent can read <em>or</em> send, but not both in the same session. Direct harm (60.4%) is different: these are single-step attacks where the attacker tool acts alone (delete a file, transfer funds) without needing a prior read of sensitive data. There's no two-step composition to catch, so APC can only block the 39.6% of cases where the user's own tool happened to read sensitive data first. The remaining 60.4% require inspecting what the tool does with its parameters — outside APC's scope. The third column (39.9% / 82.0%) is a deliberate stress test: we remove the key rule (read → send) from APC's configuration to prove the rule was doing the work. With that rule gone, data stealing attacks succeed again at 39.9%. This is like testing a firewall by removing a rule — it shows the guarantee depends on correct configuration.
+  </div>
+  <div class="detail-toggle" onclick="toggleDetail(this)">
+    Explore by attack type
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="detail-panel">
+    <div class="miller" id="injecagent-miller">
+      <div class="miller-col" id="mc-col1"></div>
+      <div class="miller-col" id="mc-col2"><div class="miller-empty">Select a category</div></div>
+      <div class="miller-col" id="mc-col3"><div class="miller-empty">Select a case</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- BENCHMARK 2: ASB                                           -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="bench">
+  <div class="bench-header">
+    <div class="bench-top">
+      <div class="bench-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16.5h10"/></svg></div>
+      <div class="bench-title-block">
+        <div class="bench-name">Agent Security Bench (ASB)</div>
+        <div class="bench-source">Zhang et al. (2024) · <a href="https://arxiv.org/abs/2410.02644" target="_blank">arXiv:2410.02644</a> · <a href="https://github.com/agiresearch/ASB" target="_blank">GitHub</a></div>
+      </div>
+      <div class="bench-badge">400 cases</div>
+    </div>
+    <div class="bench-desc">
+      Multi-domain agent security benchmark. <strong>10 agent scenarios</strong> across finance, legal, medical, education, and more. 400 attack tools (200 stealthy + 200 disruptive) testing indirect prompt injection across domains. Same composition closure evaluation as InjecAgent — validates cross-domain generalization.
+    </div>
+  </div>
+  <div class="bench-body">
+    <div class="result-grid c3">
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rd)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="4" y1="4" x2="20" y2="20"/></svg></div>
+          <div class="result-card-label">No Defense</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Attack Success Rate for stealthy attacks — covert operations designed to go unnoticed.">Stealthy ASR</span>
+          <span class="tag rd">100%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Attack Success Rate for disruptive attacks — overt harmful operations like service interruption.">Disruptive ASR</span>
+          <span class="tag rd">100%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--g400)">0 / 400</span>
+        </div>
+      </div>
+
+      <div class="result-card primary">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+          <div class="result-card-label">APC Result</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="30% stealthy attacks pass because the normal tool is non-sensitive (e.g., flight_simulator → write). Same structural pattern as InjecAgent direct harm — requires parameter-level validation.">Stealthy ASR</span>
+          <span class="tag am">30%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="All 200 disruptive attacks blocked. Every read_sensitive→harmful_action chain caught by composition closure.">Disruptive ASR</span>
+          <span class="tag gn">0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="340 of 400 attacks blocked. All disruptive (200) + 140 stealthy where normal tool accesses sensitive data.">Blocked</span>
+          <span class="metric-val" style="color:var(--gn)">340 / 400</span>
+        </div>
+        <div class="progress">
+          <div class="progress-fill" style="width:85%"></div>
+        </div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--am)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+          <div class="result-card-label tip" data-tip="What happens when key prohibited pairs are deliberately removed from the restriction rules. Like a firewall with missing rules — the guarantee is only as strong as the policy you configure.">Stress Test (APC rules removed)</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Stealthy ASR</span>
+          <span class="tag am">60%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Disruptive ASR</span>
+          <span class="tag rd">100%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--am)">80 / 400</span>
+        </div>
+        <div class="progress">
+          <div class="progress-fill" style="width:20%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:16px 0;border-top:1px solid var(--g100);font:400 15px/1.7 var(--serif);color:var(--g500)">
+    Disruptive attacks (0%) follow a clear pattern: the agent reads sensitive data, then the attacker tries to destroy or corrupt it. APC catches every case because (read_sensitive → harmful_action) is a prohibited rule. Stealthy attacks (30%) are harder: in 6 of 10 agent scenarios, the agent's normal tool is non-sensitive (e.g., a flight simulator or calculator). Since the first action isn't flagged as sensitive, there's no prohibited pair to trigger. The 30% that pass are these non-sensitive-first cases — blocking them requires inspecting what the tool <em>does</em> with its output, not just what type of action it is. The third column is a deliberate stress test: we remove key rules from APC's configuration. Stealthy ASR rises to 60% (fewer rules catch fewer patterns) and disruptive ASR returns to 100% (the critical rule is gone). This confirms that the guarantee depends entirely on having the right rules configured — like a firewall, APC is only as strong as its policy.
+  </div>
+  <div class="detail-toggle" onclick="toggleDetail(this)">
+    Explore by agent domain
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="detail-panel">
+    <div class="miller" id="asb-miller">
+      <div class="miller-col" id="asb-col1"></div>
+      <div class="miller-col" id="asb-col2"><div class="miller-empty">Select an agent domain</div></div>
+      <div class="miller-col" id="asb-col3"><div class="miller-empty">Select a case</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Combined chart: Static benchmark results -->
+<div style="padding:32px 0;border-top:1px solid var(--g100)">
+  <div style="font:600 15px var(--sans);color:var(--g800);margin-bottom:20px">Composition Closure: Attack Success Rate</div>
+  <img src="chart-composition.svg" alt="Composition closure results: data stealing and disruptive attacks reduced from 100% to 0%" style="width:100%;max-width:700px;display:block;margin:0 auto">
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- HEAD-TO-HEAD: APC vs SEAgent vs Progent                    -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div class="section-label">Enforcement Mechanism Comparison</div>
+<div class="section-sublabel">Analytical context — simplified simulations on the same data, not a head-to-head benchmark</div>
+
+<div class="prose">
+  <p>To contextualize APC's enforcement approach, we compare three mechanism classes using <strong>simplified simulations</strong> on the same InjecAgent and ASB test cases. These are not the original framework codebases: the SEAgent simulation (<a href="#ref-9" style="color:var(--g800);text-decoration:none"><sup>[9]</sup></a>) models sensitivity-label propagation but not full data-provenance tracking; the Progent simulation (<a href="#ref-10" style="color:var(--g800);text-decoration:none"><sup>[10]</sup></a>) models tool-name filtering but not argument-level constraints. The comparison evaluates <em>mechanism classes</em>, not specific implementations, and the results provide analytical intuition rather than comparative evidence.</p>
+</div>
+
+<div class="bench">
+  <div class="bench-header">
+    <div class="bench-top">
+      <div class="bench-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="bench-title-block">
+        <div class="bench-name">InjecAgent — Three Mechanism Classes</div>
+        <div class="bench-source">1,054 test cases · Same data, different enforcement mechanisms</div>
+      </div>
+      <div class="bench-badge">1,054 cases</div>
+    </div>
+    <div class="bench-desc">
+      Data stealing (544 cases) and direct harm (510 cases) evaluated under three deterministic enforcement mechanisms. Composition closure and information flow tracking produce nearly identical results on two-step exfiltration chains.
+    </div>
+  </div>
+  <div class="bench-body">
+    <div class="result-grid c3">
+      <div class="result-card primary">
+        <div class="result-card-header">
+          <div class="result-card-label">Composition Closure (APC)</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Data Stealing ASR</span>
+          <span class="tag gn">0.0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Direct Harm ASR</span>
+          <span class="tag am">60.4%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Total ASR</span>
+          <span class="metric-val" style="color:var(--g700)">29.2%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--gn)">746 / 1,054</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:70.8%;background:var(--gn)"></div></div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-label" style="color:var(--bl)">Info Flow (SEAgent sim.)</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Our simplified simulation misses 9 data stealing cases where the user tool reads public data (not read_sensitive). The actual SEAgent implementation uses a full information flow graph that may track data provenance more precisely.">Data Stealing ASR</span>
+          <span class="tag am">1.7%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Direct Harm ASR</span>
+          <span class="tag am">59.2%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Total ASR</span>
+          <span class="metric-val" style="color:var(--g700)">29.5%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--bl)">743 / 1,054</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:70.5%;background:var(--bl)"></div></div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-label" style="color:var(--vi)">Allowlist (Progent sim.)</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Any tool-name allowlist achieves 0% ASR on these benchmarks because attacker tools are disjoint from user tools. This is a property of the benchmark design, not of Progent specifically. Progent's full DSL also supports argument-level constraints not tested here.">Data Stealing ASR</span>
+          <span class="tag gn" style="color:var(--g400)">0.0%*</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Direct Harm ASR</span>
+          <span class="tag gn" style="color:var(--g400)">0.0%*</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Total ASR</span>
+          <span class="metric-val" style="color:var(--g400)">0.0%*</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--vi)">1,054 / 1,054</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:100%;background:var(--g300)"></div></div>
+      </div>
+    </div>
+    <div style="font:400 12px var(--sans);color:var(--g400);margin-top:8px">* Any tool-name allowlist achieves 0% on these benchmarks because attacker tools are disjoint from user tools.</div>
+  </div>
+</div>
+
+<div class="bench">
+  <div class="bench-header">
+    <div class="bench-top">
+      <div class="bench-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+      <div class="bench-title-block">
+        <div class="bench-name">ASB — Three Mechanism Classes</div>
+        <div class="bench-source">400 attack tools · 10 agent scenarios · Where the gap between mechanisms becomes visible</div>
+      </div>
+      <div class="bench-badge">400 cases</div>
+    </div>
+    <div class="bench-desc">
+      Multi-domain benchmark where sensitivity-based tracking shows a structural limitation. Agents with non-sensitive normal tools (read, execute) create sessions that the information flow simulation does not flag, while composition closure blocks the same attacks via action-class pairs.
+    </div>
+  </div>
+  <div class="bench-body">
+    <div class="result-grid c3">
+      <div class="result-card primary">
+        <div class="result-card-header">
+          <div class="result-card-label">Composition Closure (APC)</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Stealthy ASR</span>
+          <span class="tag am">30.0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Disruptive ASR</span>
+          <span class="tag gn">0.0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Total ASR</span>
+          <span class="metric-val" style="color:var(--gn)">15.0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--gn)">340 / 400</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:85%;background:var(--gn)"></div></div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-label" style="color:var(--bl)">Info Flow (SEAgent sim.)</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Our simulation models sensitivity-label propagation, not full data-provenance tracking. The actual SEAgent implementation may narrow this gap. The 60% ASR arises because 6 of 10 agent scenarios use normal tools classified as non-sensitive.">Stealthy ASR</span>
+          <span class="tag rd">60.0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Disruptive ASR</span>
+          <span class="tag rd">60.0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Total ASR</span>
+          <span class="metric-val" style="color:var(--rd)">60.0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--bl)">160 / 400</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:40%;background:var(--bl)"></div></div>
+      </div>
+
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-label" style="color:var(--vi)">Allowlist (Progent sim.)</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Stealthy ASR</span>
+          <span class="tag gn" style="color:var(--g400)">0.0%*</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Disruptive ASR</span>
+          <span class="tag gn" style="color:var(--g400)">0.0%*</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Total ASR</span>
+          <span class="metric-val" style="color:var(--g400)">0.0%*</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--vi)">400 / 400</span>
+        </div>
+        <div class="progress"><div class="progress-fill" style="width:100%;background:var(--g300)"></div></div>
+      </div>
+    </div>
+    <div style="font:400 12px var(--sans);color:var(--g400);margin-top:8px">* Any tool-name allowlist achieves 0% on these benchmarks because attacker tools are disjoint from user tools.</div>
+  </div>
+</div>
+
+<div class="callout-bar blue">
+  <strong>What the comparison reveals.</strong> The informative comparison is between composition closure and information flow tracking — both reason about action sequences, but at different abstraction levels. On InjecAgent, they are functionally equivalent (29.2% vs 29.5%). On ASB, composition closure blocks substantially more attacks (15% vs 60%) because it operates on action classes regardless of sensitivity labels. The reported gap represents an upper bound: our simulation models sensitivity-label propagation, not SEAgent's full data-provenance graph, which may narrow the difference. The allowlist result (0%) is uninformative for these benchmarks — it holds by construction when attacker tools are disjoint from user tools. A defense-in-depth stack combining all three mechanism classes would cover the widest range of attack patterns.
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- BENCHMARK: Adaptive Attacks                                -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+
+<div style="font:400 15px/1.7 var(--serif);color:var(--g500);margin:32px 0 8px">
+  Static benchmarks validate the policy. But what if the attacker knows the policy? The adaptive evaluation assumes full knowledge of APC internals — scope definitions, composition restrictions, budget limits — and designs targeted evasion strategies.
+</div>
+
+<div class="section-label">Adversarial Robustness</div>
+<div class="section-sublabel">APC-aware adversary with full knowledge of the model internals</div>
+
+<div class="bench">
+  <div class="bench-header">
+    <div class="bench-top">
+      <div class="bench-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16.5h10"/></svg></div>
+      <div class="bench-title-block">
+        <div class="bench-name">Adaptive Adversary Evaluation</div>
+        <div class="bench-source">Custom benchmark · APC-aware adversary with full model knowledge</div>
+      </div>
+      <div class="bench-badge">43 cases</div>
+    </div>
+    <div class="bench-desc">
+      Adversary with <strong>complete knowledge of APC internals</strong> — scope definitions, composition restrictions, budget limits. Designs 23 targeted evasion strategies across all 6 conditions, tested with and without enforcement. Pure policy evaluation — same code paths, enforcement toggled.
+    </div>
+  </div>
+  <div class="bench-body">
+    <div class="result-grid c2">
+
+      <!-- Baseline -->
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rd)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="4" y1="4" x2="20" y2="20"/></svg></div>
+          <div class="result-card-label">No Defense</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Empirical baseline: each attack sequence re-evaluated through the same code paths with enforcement disabled (checker=None). All attacks succeed without APC.">Attack Success (ASR)</span>
+          <span class="tag rd">100%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Blocked</span>
+          <span class="metric-val" style="color:var(--g400)">0 / 23</span>
+        </div>
+      </div>
+
+      <!-- APC Complete -->
+      <div class="result-card primary">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+          <div class="result-card-label">APC Result</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="100% ASR reduction from baseline. All 23 attack scenarios blocked across all 6 conditions. Remaining scenarios are positive/utility cases (expected to pass) and tests demonstrating known limitations.">Attack Success (ASR)</span>
+          <span class="tag gn">0%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="23 attacks blocked across all 6 conditions: composition (C2b), budget (C2c), scope (C2a), intent (C6), approval (C4), evidence (C5), identity (C1), context (C3), and trust boundaries (T2).">Blocked</span>
+          <span class="metric-val" style="color:var(--gn)">23 / 23</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">ASR Reduction</span>
+          <span class="metric-val" style="color:var(--gn)">−100%</span>
+        </div>
+        <div class="progress">
+          <div class="progress-fill" style="width:100%"></div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="43 total scenarios: 19 positive/utility cases + 24 attack variants targeting prohibited outcomes. 23 attacks blocked; session splitting admitted by design (per-session composition state). All 43 produce the expected outcome.">All variants correct</span>
+          <span class="tag gn">43 / 43</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div style="padding:16px 0;border-top:1px solid var(--g100);font:400 15px/1.7 var(--serif);color:var(--g500)">
+    An attacker who knows exactly how APC works — every rule, every threshold, every budget limit — designs 23 targeted evasion strategies. Each strategy targets a specific condition: decomposing exfiltration into smaller steps to evade composition rules, replaying expired approval tokens, suppressing the audit trail, or splitting attacks across sessions. Of the 24 attack variants targeting prohibited outcomes, 23 are blocked; session splitting is admitted by design because composition state is per-session. The 43 total includes 19 positive cases (legitimate actions that should be admitted) — all pass correctly, confirming zero false positives.
+  </div>
+  <div class="detail-toggle" onclick="toggleDetail(this)">
+    Explore attack scenarios
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="detail-panel">
+    <div class="miller" id="adaptive-miller">
+      <div class="miller-col" id="at-col1"></div>
+      <div class="miller-col" id="at-col2"><div class="miller-empty">Select an attack</div></div>
+      <div class="miller-col" id="at-col3"><div class="miller-empty">Select a scenario</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- BENCHMARK 5: Delegation Chains                             -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="bench">
+  <div class="bench-header">
+    <div class="bench-top">
+      <div class="bench-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"/><path d="M8.5 2h7"/><path d="M7 16.5h10"/></svg></div>
+      <div class="bench-title-block">
+        <div class="bench-name">Multi-hop Delegation Chains</div>
+        <div class="bench-source">Custom benchmark · Validates damage containment across delegation depth</div>
+      </div>
+      <div class="bench-badge">99 cases</div>
+    </div>
+    <div class="bench-desc">
+      Tests delegation security across <strong>2–8 hop chains</strong> with 99 scenarios covering all 6 conditions, damage containment guarantees, and scope narrowing. Includes 23 positive cases confirming legitimate actions are admitted.
+    </div>
+  </div>
+  <div class="bench-body">
+    <div class="result-grid c2">
+
+      <!-- Baseline -->
+      <div class="result-card">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rd)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><line x1="4" y1="4" x2="20" y2="20"/></svg></div>
+          <div class="result-card-label">No Defense</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="Without APC enforcement, all 76 attack scenarios succeed — scope escalation, budget overflow, composition bypass, identity spoofing, replay attacks, and intent drift all pass unchecked.">Attack Success (ASR)</span>
+          <span class="tag rd">100%</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name">Attacks blocked</span>
+          <span class="metric-val" style="color:var(--g400)">0 / 76</span>
+        </div>
+      </div>
+
+      <!-- APC Complete -->
+      <div class="result-card primary">
+        <div class="result-card-header">
+          <div class="result-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></div>
+          <div class="result-card-label">APC Result</div>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="All 76 attack scenarios blocked across scope escalation, budget exhaustion, composition bypass, identity spoofing, context replay, approval abuse, evidence evasion, and intent drift.">Attacks blocked</span>
+          <span class="tag gn">76 / 76</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="23 positive/utility scenarios (legitimate actions that should be admitted) all pass correctly. Zero false positives.">Legitimate admitted</span>
+          <span class="tag gn">23 / 23</span>
+        </div>
+        <div class="metric">
+          <span class="metric-name tip" data-tip="99 total scenarios: 76 attacks + 23 positive cases. All 99 produce the expected outcome — damage containment validated at every delegation depth.">Total correct</span>
+          <span class="tag gn">99 / 99</span>
+        </div>
+        <div class="progress">
+          <div class="progress-fill" style="width:100%"></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div style="padding:16px 0;border-top:1px solid var(--g100);font:400 15px/1.7 var(--serif);color:var(--g500)">
+    When a user delegates to an agent, and that agent delegates to a sub-agent, authority must shrink at each step — a sub-agent should never have more power than its parent. These 99 scenarios test this across chains of 2 to 8 agents: can a deep sub-agent escalate its scope? Exhaust the budget? Bypass composition rules? Forge an identity? In every case, APC blocks the attack. The 23 positive cases confirm that legitimate delegations still work — no false positives.
+  </div>
+  <div class="detail-toggle" onclick="toggleDetail(this)">
+    Explore delegation scenarios
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+  </div>
+  <div class="detail-panel">
+    <div class="miller" id="delegation-miller">
+      <div class="miller-col" id="del-col1"></div>
+      <div class="miller-col" id="del-col2"><div class="miller-empty">Select a category</div></div>
+      <div class="miller-col" id="del-col3"><div class="miller-empty">Select a scenario</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════ -->
+<!-- COVERAGE                                                   -->
+<!-- ═══════════════════════════════════════════════════════════ -->
+<div class="bench" style="border-color:var(--g200)">
+  <div class="bench-header" style="border-bottom:none;padding-bottom:0">
+    <div class="bench-top">
+      <div class="bench-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--g500)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="8" y1="15" x2="8" y2="9"/><line x1="12" y1="15" x2="12" y2="7"/><line x1="16" y1="15" x2="16" y2="11"/></svg></div>
+      <div class="bench-title-block">
+        <div class="bench-name">Evaluation Coverage</div>
+      </div>
+    </div>
+  </div>
+  <div class="bench-body">
+    <div class="coverage-grid" style="grid-template-columns:repeat(5,1fr)">
+      <div class="cov-card">
+        <div class="cov-name">InjecAgent</div>
+        <div class="cov-value" style="color:var(--gn)">1,054</div>
+        <div class="cov-total">100%</div>
+        <div class="progress"><div class="progress-fill" style="width:100%"></div></div>
+      </div>
+      <div class="cov-card">
+        <div class="cov-name">ASB</div>
+        <div class="cov-value" style="color:var(--gn)">400</div>
+        <div class="cov-total">100%</div>
+        <div class="progress"><div class="progress-fill" style="width:100%"></div></div>
+      </div>
+      <div class="cov-card">
+        <div class="cov-name">AgentDojo</div>
+        <div class="cov-value" style="color:var(--gn)">1,558</div>
+        <div class="cov-total">100%</div>
+        <div class="progress"><div class="progress-fill" style="width:100%"></div></div>
+      </div>
+      <div class="cov-card">
+        <div class="cov-name">Adaptive</div>
+        <div class="cov-value" style="color:var(--gn)">43</div>
+        <div class="cov-total">100%</div>
+        <div class="progress"><div class="progress-fill" style="width:100%"></div></div>
+      </div>
+      <div class="cov-card">
+        <div class="cov-name">Delegation</div>
+        <div class="cov-value" style="color:var(--gn)">99</div>
+        <div class="cov-total">100%</div>
+        <div class="progress"><div class="progress-fill" style="width:100%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section-label">Discussion</div>
+
+<div class="prose">
+  <p><strong>Three levels of guarantee.</strong> The evaluation supports a clear hierarchy. Composition closure provides the strongest guarantee: exfiltration attacks are blocked at 0% ASR across all four domains, including financial transfers. This holds independently of intent parsing, impact calibration, or model robustness. Intent binding provides a configuration-dependent guarantee: aggregated across four domains, destruction ASR drops to 4% and manipulation ASR to 12.1% (14 of 116 manipulation runs). The residual is not diffuse — it concentrates in two categories: <em>intent overlap</em> (14 of 18 residual cases, 78%), where the attack action class matches the user task's declared intent, and <em>missing composition pairs</em> (4 cases, 22%), where the restriction set lacks a specific pair. Both are addressable by finer action taxonomies or policy completeness. Parameter-level validation is needed to distinguish legitimate from malicious actions at the same action-type level.</p>
+
+  <p><strong>Pairwise vs. k-tuple composition closure.</strong> Pairwise composition closure is sufficient for the deterministic benchmarks where attacks follow a two-step pattern (read → exfiltrate): InjecAgent achieves 0% ASR on data stealing and ASB blocks all disruptive attacks with pairwise restrictions alone. K-tuple restrictions become necessary in live multi-step trajectories: the adaptive attack suite indicates that decomposed exfiltration (read → write → send) evades pairwise closure but is caught by 3-tuple restrictions.</p>
+
+  <p><strong>Model robustness is necessary but not sufficient.</strong> Both Claude Sonnet 4.6 and Haiku 4.5 resist all of AgentDojo's built-in injection strategies. The compromised-model evaluation — which injects ground-truth attacks regardless of model behavior — indicates that APC's enforcement holds across all four domains with Haiku 4.5. Model robustness is empirical and transient — it depends on training data and can degrade with fine-tuning, model replacement, or novel attack strategies. APC's enforcement is deterministic and permanent: the same rules block the same action sequences regardless of which model generates them.</p>
+
+  <p><strong>What APC does not cover.</strong> Actions that are individually authorized but contextually malicious — creating a calendar event for the attacker when the user's task involves calendar writes — require parameter-level validation: inspecting argument values to determine malicious intent. This is outside APC's design boundary and is the primary direction for future work. The enforcement mechanism comparison shows that tool-name allowlists (Progent <a href="#ref-10" style="color:var(--g800);text-decoration:none"><sup>[10]</sup></a>) cover this gap when attacker tools are distinct from user tools, and information flow tracking (SEAgent <a href="#ref-9" style="color:var(--g800);text-decoration:none"><sup>[9]</sup></a>) provides complementary coverage. A defense-in-depth stack combining composition closure, tool-name policies, and parameter-level matching would address the widest range of attack patterns, with each layer providing guarantees over its own domain.</p>
+
+  <p><strong>Utility cost decomposes into two components.</strong> Across four domains, the aggregated interactive delta is −8.6 percentage points. The gap between strict and interactive isolates the cost of approval gating (C4) — a deployment-time UX decision recoverable with interactive confirmation. The gap between interactive and baseline reflects the residual cost of composition closure and intent binding. Travel shows the lowest structural cost (+0.2%), while slack shows the highest (−13.0%), reflecting the proportion of tasks requiring action sequences indistinguishable from prohibited patterns at the action-type level. We distinguished three sources of utility loss — implementation defects, operationally invalid policies, and genuine security-utility tradeoffs — and corrected only the first two before the final reported runs.</p>
+
+  <p><strong>Relationship to Progent.</strong> In a matched-protocol comparison using Progent's AgentDojo fork adapted to Bedrock, both systems achieved 0% observed ASR across all available domains. Attack-time utility was comparable in banking and workspace (weighted mean delta +1.6 pp in favor of Progent, within the pre-registered ±2 pp threshold). The systems address complementary problems and can in principle be composed.</p>
+</div>
+
+<div class="section-label" id="references">References</div>
+
+<div style="font:400 14px/2.0 var(--sans);color:var(--g500);margin-bottom:32px">
+  <p id="ref-1" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[1]</strong> OWASP Foundation. "Top 10 for Agentic Applications." 2025. <a href="https://genai.owasp.org" style="color:var(--g600)">genai.owasp.org</a></p>
+  <p id="ref-2" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[2]</strong> Cloud Security Alliance. "MAESTRO: Agentic AI Threat Modeling Framework." 2025. <a href="https://cloudsecurityalliance.org/blog/2025/02/06/agentic-ai-threat-modeling-framework-maestro" style="color:var(--g600)">cloudsecurityalliance.org</a></p>
+  <p id="ref-3" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[3]</strong> AIUC Consortium. "AIUC-1: Security, Safety, and Reliability Standard for AI Agents." 2025. <a href="https://aiuc.com/research/introducing-aiuc-1" style="color:var(--g600)">aiuc.com</a></p>
+  <p id="ref-4" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[4]</strong> Dziemian et al. "How Vulnerable Are AI Agents to Indirect Prompt Injections? Insights from a Large-Scale Public Competition." 2026. <a href="https://arxiv.org/abs/2603.15714" style="color:var(--g600)">arXiv:2603.15714</a></p>
+  <p id="ref-5" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[5]</strong> Zhan et al. "InjecAgent: Benchmarking Indirect Prompt Injections in Tool-Integrated LLM Agents." 2024. <a href="https://arxiv.org/abs/2403.02691" style="color:var(--g600)">arXiv:2403.02691</a></p>
+  <p id="ref-6" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[6]</strong> Zhang et al. "Agent Security Bench (ASB): Formalizing and Benchmarking Attacks and Defenses in LLM-Based Agents." 2024. <a href="https://arxiv.org/abs/2410.02644" style="color:var(--g600)">arXiv:2410.02644</a></p>
+  <p id="ref-7" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[7]</strong> Debenedetti et al. "AgentDojo: A Dynamic Environment to Evaluate Attacks and Defenses for LLM Agents." 2024. <a href="https://arxiv.org/abs/2406.13352" style="color:var(--g600)">arXiv:2406.13352</a></p>
+  <p id="ref-8" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[8]</strong> Hua et al. "It's a TRAP! Task-Redirecting Agent Persuasion Benchmark for Web Agents." 2025. <a href="https://arxiv.org/abs/2512.23128" style="color:var(--g600)">arXiv:2512.23128</a></p>
+  <p id="ref-9" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[9]</strong> Ji et al. "Taming Various Privilege Escalation in LLM-Based Agent Systems." 2026. <a href="https://arxiv.org/abs/2601.11893" style="color:var(--g600)">arXiv:2601.11893</a></p>
+  <p id="ref-10" style="padding-left:24px;text-indent:-24px"><strong style="color:var(--g700)">[10]</strong> Shi et al. "Progent: Programmable Privilege Control for LLM Agents." 2025. <a href="https://arxiv.org/abs/2504.11703" style="color:var(--g600)">arXiv:2504.11703</a></p>
+</div>
+
+</div><!-- /container -->
+
+<div id="tooltip"></div>
+<script src="results-data.js"></script>
+<script>
+// ── Tooltip ──
+const tip = document.getElementById('tooltip');
+document.addEventListener('mouseover', e => {
+  const el = e.target.closest('[data-tip]');
+  if (!el) return;
+  tip.textContent = el.getAttribute('data-tip');
+  tip.style.display = 'block';
+  const r = el.getBoundingClientRect(), tw = 300;
+  let left = r.left + r.width/2 - tw/2;
+  left = Math.max(8, Math.min(left, window.innerWidth - tw - 8));
+  if (r.top - 12 - tip.offsetHeight > 4) {
+    tip.style.top = (r.top - 12 - tip.offsetHeight) + 'px';
+    tip.classList.remove('flip');
+  } else {
+    tip.style.top = (r.bottom + 12) + 'px';
+    tip.classList.add('flip');
+  }
+  tip.style.left = left + 'px';
+});
+document.addEventListener('mouseout', e => {
+  if (e.target.closest('[data-tip]')) tip.style.display = 'none';
+});
+function toggleDetail(btn) {
+  btn.classList.toggle('open');
+  btn.nextElementSibling.classList.toggle('open');
+}
+
+// ── Shared constants ──
+const CK = ['C1','C2a','C2b','C2c','C3','C4','C5','C6'];
+const CL = {
+  C1:'C1 Identity — actor verified in principal chain',
+  C2a:'C2a Scope — action and resource within delegated scope',
+  C2b:'C2b Composition — no prohibited action pair in session',
+  C2c:'C2c Budget — cumulative blast radius within ceiling',
+  C3:'C3 Context — session and policy version match',
+  C4:'C4 Approval — impact below threshold or valid token',
+  C5:'C5 Evidence — audit trail committed before execution',
+  C6:'C6 Intent — action consistent with declared task objective'
+};
+
+// ── Donut SVG ──
+function donut(blocked, total, sz) {
+  const r = (sz||20)/2, sr = r-3, circ = 2*Math.PI*sr;
+  const g = circ*(blocked/total), gap = circ-g;
+  return '<svg width="'+(r*2)+'" height="'+(r*2)+'" style="flex-shrink:0"><circle cx="'+r+'" cy="'+r+'" r="'+sr+'" fill="none" stroke="var(--g200)" stroke-width="2.5"/><circle cx="'+r+'" cy="'+r+'" r="'+sr+'" fill="none" stroke="var(--gn)" stroke-width="2.5" stroke-dasharray="'+g.toFixed(1)+' '+gap.toFixed(1)+'" stroke-dashoffset="'+(circ*.25).toFixed(1)+'" stroke-linecap="round"/></svg>';
+}
+
+// ── Unified step renderer (col 3) ──
+function renderSteps(steps, container) {
+  let h = '';
+  steps.forEach((s, i) => {
+    // s = [tool, action, admitted, conditions_or_null]
+    const ok = s[2], cls = ok ? 'ok' : 'no';
+    h += '<div class="mc-step">';
+    h += '<div class="mc-step-header">';
+    h += '<div class="mc-step-num ' + cls + '">' + (i+1) + '</div>';
+    h += '<div style="flex:1;min-width:0"><div class="mc-step-tool">' + s[0] + '</div><div class="mc-step-action">' + s[1] + '</div></div>';
+    h += '<div class="mc-step-badge" style="color:var(--' + (ok ? 'gn' : 'rd') + ')">' + stepLabel(ok, s[1] || step[1] || '') + '</div>';
+    h += '</div>';
+    if (s[3]) {
+      h += '<div class="mc-conds">';
+      s[3].forEach((v, ci) => {
+        h += '<div class="mc-cond ' + (v ? 'pass' : 'fail') + '" data-tip="' + CL[CK[ci]] + '">' + CK[ci] + ' ' + (v ? '\u2713' : '\u2717') + '</div>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+  });
+  document.getElementById(container).innerHTML = '<div class="miller-col-header">Step Detail</div>' + h;
+}
+
+// ── Step label helper: context-aware labels ──
+function stepLabel(ok, action) {
+  var a = (action || '').toLowerCase();
+  if (a.indexOf('attack') >= 0 || a.indexOf('succeeded') >= 0 || a.indexOf('blocked') >= 0) {
+    return ok ? 'Blocked' : 'Succeeded';
+  }
+  if (a.indexOf('upr') >= 0 || a.indexOf('utility') >= 0 || a.indexOf('delta') >= 0) {
+    return ok ? 'Preserved' : 'Regression';
+  }
+  return ok ? 'Admitted' : 'Denied';
+}
+
+// ── Unified case list renderer (col 2) ──
+function renderCaseList(cases, container, detailContainer, benchId) {
+  const blocked = cases.filter(c => c[2]);
+  const allowed = cases.filter(c => !c[2]);
+  const allSame = blocked.length === cases.length && cases.length > 10;
+
+  let h = '<div class="miller-col-header">' + cases.length + ' cases</div>';
+
+  if (allSame) {
+    h += '<div style="padding:10px 14px;font:400 11px var(--sans);color:var(--g500);line-height:1.5;border-bottom:1px solid var(--g100)">';
+    h += '<span class="tag gn" style="font-size:9px">All ' + cases.length + ' blocked</span>';
+    h += '<div style="margin-top:6px">Same pattern across all cases. Sample:</div></div>';
+    const seen = new Set();
+    cases.forEach((c, i) => {
+      if (seen.size >= 5 || seen.has(c[0])) return;
+      seen.add(c[0]);
+      h += caseRow(c, i, benchId);
+    });
+    if (cases.length > 5) h += '<div style="padding:6px 14px;font:400 10px var(--sans);color:var(--g300)">\u2026 ' + (cases.length-5) + ' more identical</div>';
+  } else {
+    if (blocked.length) {
+      h += '<div style="padding:6px 14px;font:600 9px var(--mono);color:var(--gn);text-transform:uppercase;letter-spacing:.4px">Blocked \u2014 ' + blocked.length + '</div>';
+      blocked.forEach(c => { h += caseRow(c, cases.indexOf(c), benchId); });
+    }
+    if (allowed.length) {
+      h += '<div style="padding:6px 14px;font:600 9px var(--mono);color:var(--am);text-transform:uppercase;letter-spacing:.4px">Allowed \u2014 ' + allowed.length + '</div>';
+      allowed.forEach(c => { h += caseRow(c, cases.indexOf(c), benchId); });
+    }
+  }
+  document.getElementById(container).innerHTML = h;
+  document.getElementById(detailContainer).innerHTML = '<div class="miller-empty">Select a case</div>';
+}
+
+function caseRow(c, idx, benchId) {
+  let tagLabel, tagCls;
+  if (benchId === 'agentdojo_utility') {
+    tagLabel = c[2] ? 'Preserved' : 'Regression';
+    tagCls = c[2] ? 'gn' : 'am';
+  } else {
+    tagLabel = c[2] ? 'Blocked' : 'Allowed';
+    tagCls = c[2] ? 'gn' : 'am';
+  }
+  const tag = '<span class="tag ' + tagCls + '" style="font-size:8px">' + tagLabel + '</span>';
+  let h = '<div class="mc-case" onclick="onCaseClick(\'' + benchId + '\',' + idx + ',this)">';
+  h += '<div class="mc-case-tool">' + c[0] + '</div>';
+  if (benchId === 'adaptive') {
+    // c[1] = description (string), c[5] = tool_sequence (array)
+    if (c[5] && c[5].length) h += '<div class="mc-case-chain">' + c[5].join(' \u2192 ') + '</div>';
+  } else if (benchId === 'delegation') {
+    // c[1] = [depth, hop, property] array
+    if (c[1] && c[1].length) h += '<div class="mc-case-chain">' + c[1][2] + '</div>';
+  } else if (benchId === 'agentdojo_utility' || benchId === 'agentdojo_compromised') {
+    // c[1] = info array (strings)
+    if (c[1] && c[1].length) h += '<div class="mc-case-chain">' + c[1][1] + '</div>';
+  } else {
+    // InjecAgent/ASB: c[1] = attacker_tools (array)
+    if (c[1] && c[1].length) h += '<div class="mc-case-chain">' + c[1].join(' \u2192 ') + '</div>';
+  }
+  h += '<div class="mc-case-meta">' + tag + '</div>';
+  h += '</div>';
+  return h;
+}
+
+// ── State per benchmark ──
+const state = {
+  injecagent: { cat: null, col1: 'mc-col1', col2: 'mc-col2', col3: 'mc-col3' },
+  asb:        { cat: null, col1: 'asb-col1', col2: 'asb-col2', col3: 'asb-col3' },
+  agentdojo_utility:      { cat: null, col1: 'adu-col1', col2: 'adu-col2', col3: 'adu-col3' },
+  agentdojo_compromised:  { cat: null, col1: 'adc-col1', col2: 'adc-col2', col3: 'adc-col3' },
+  adaptive:   { cat: null, col1: 'at-col1', col2: 'at-col2', col3: 'at-col3' },
+  delegation: { cat: null, col1: 'del-col1', col2: 'del-col2', col3: 'del-col3' },
+};
+
+function onCatClick(benchId, catKey) {
+  const s = state[benchId];
+  s.cat = catKey;
+  renderCol1For(benchId);
+  const cases = BENCH_DATA[benchId][catKey];
+
+  // ASB: cases = {blocked, total, asr} — render summary instead of case list
+  if (benchId === 'asb' && !Array.isArray(cases)) {
+    let h = '<div class="miller-col-header">' + catKey.replace(/_/g, ' ') + '</div>';
+    h += '<div style="padding:14px">';
+    h += '<div class="metric"><span class="metric-name">Total attacks</span><span class="metric-val" style="color:var(--g700)">' + cases.total + '</span></div>';
+    h += '<div class="metric"><span class="metric-name">Blocked</span><span class="metric-val" style="color:var(--gn)">' + cases.blocked + '</span></div>';
+    h += '<div class="metric"><span class="metric-name">ASR</span><span class="tag ' + (cases.asr === 0 ? 'gn' : 'am') + '">' + (cases.asr * 100).toFixed(0) + '%</span></div>';
+    h += '</div>';
+    document.getElementById(s.col2).innerHTML = h;
+    document.getElementById(s.col3).innerHTML = '<div class="miller-empty">Agent summary shown</div>';
+    return;
+  }
+
+  renderCaseList(cases, s.col2, s.col3, benchId);
+}
+
+function onCaseClick(benchId, idx, el) {
+  const s = state[benchId];
+  el.closest('.miller-col').querySelectorAll('.mc-case').forEach(e => e.classList.remove('active'));
+  el.classList.add('active');
+
+  const c = BENCH_DATA[benchId][s.cat][idx];
+
+  if (benchId === 'adaptive') {
+    // c = [name, desc, blocked, blocked_at_step, reason, tool_sequence]
+    const blocked = c[2], step = c[3], reason = c[4], seq = c[5], conds = c[6];
+    let h = '<div class="miller-col-header">' + c[0] + '</div>';
+    h += '<div style="padding:14px">';
+    h += '<div style="font:400 12px var(--sans);color:var(--g600);line-height:1.6;margin-bottom:12px">' + c[1] + '</div>';
+    h += '<div style="margin-bottom:10px"><span class="tag ' + (blocked ? 'gn' : 'am') + '">' + (blocked ? 'Blocked' : 'Allowed') + '</span></div>';
+    if (blocked && step) h += '<div class="metric"><span class="metric-name">Blocked at step</span><span class="metric-val" style="color:var(--gn)">' + step + '</span></div>';
+    if (reason) h += '<div class="metric"><span class="metric-name">Reason</span><span class="metric-val" style="color:var(--g600);font-size:11px;max-width:200px;text-align:right">' + reason + '</span></div>';
+    if (conds) {
+      h += '<div class="mc-conds" style="margin-top:10px">';
+      conds.forEach(function(v, ci) {
+        h += '<div class="mc-cond ' + (v ? 'pass' : 'fail') + '" data-tip="' + CL[CK[ci]] + '">' + CK[ci] + ' ' + (v ? '\u2713' : '\u2717') + '</div>';
+      });
+      h += '</div>';
+    }
+    if (seq && seq.length) {
+      h += '<div style="margin-top:14px;border-top:1px solid var(--g100);padding-top:10px">';
+      seq.forEach(function(t, i) {
+        var isBad = blocked && step && (i+1) >= step;
+        var numCls = isBad ? 'no' : 'ok';
+        h += '<div style="display:flex;align-items:center;gap:10px;padding:6px 0">';
+        h += '<div class="mc-step-num ' + numCls + '" style="position:static;flex-shrink:0">' + (i+1) + '</div>';
+        h += '<div style="flex:1;font:400 12px var(--sans);color:var(--g700);word-break:break-all">' + t + '</div>';
+        if (isBad) h += '<span class="tag rd" style="font-size:8px;flex-shrink:0">Denied</span>';
+        h += '</div>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+    document.getElementById(s.col3).innerHTML = h;
+    return;
+  }
+
+  if (benchId === 'delegation') {
+    // c = [name, [depth, hop, property], blocked, [steps...]]
+    let info = c[1] || [], blocked = c[2], steps = c[3] || [];
+    let depth = info[0] || '', advPos = info[1] || '', prop = info[2] || '';
+    let h = '<div class="miller-col-header">' + c[0] + '</div>';
+    h += '<div style="padding:14px">';
+    h += '<div style="margin-bottom:10px"><span class="tag ' + (blocked ? 'gn' : 'am') + '">' + (blocked ? 'Blocked' : 'Admitted') + '</span></div>';
+    h += '<div class="metric"><span class="metric-name">Chain depth</span><span class="metric-val" style="color:var(--g700)">' + depth + '</span></div>';
+    h += '<div class="metric"><span class="metric-name">Adversary position</span><span class="metric-val" style="color:var(--g700)">' + advPos + '</span></div>';
+    h += '<div class="metric"><span class="metric-name">Property tested</span><span class="metric-val" style="color:var(--g600);font-size:11px">' + prop + '</span></div>';
+    if (steps.length > 0) {
+      h += '<div style="margin-top:14px;border-top:1px solid var(--g100);padding-top:10px">';
+      steps.forEach(function(step, i) {
+        var ok = step[2];
+        h += '<div style="display:flex;align-items:center;gap:10px;padding:6px 0">';
+        h += '<div class="mc-step-num ' + (ok ? 'ok' : 'no') + '" style="position:static;flex-shrink:0">' + (i+1) + '</div>';
+        h += '<div style="flex:1;font:400 11px var(--sans);color:var(--g700)">' + step[0] + '</div>';
+        h += '<span class="tag ' + (ok ? 'gn' : 'rd') + '" style="font-size:8px;flex-shrink:0">' + (ok ? 'Admitted' : 'Denied') + '</span>';
+        h += '</div>';
+        if (step[3]) {
+          h += '<div class="mc-conds" style="margin:4px 0 8px">';
+          step[3].forEach(function(v, ci) {
+            h += '<div class="mc-cond ' + (v ? 'pass' : 'fail') + '" data-tip="' + CL[CK[ci]] + '">' + CK[ci] + ' ' + (v ? '\u2713' : '\u2717') + '</div>';
+          });
+          h += '</div>';
+        }
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+    document.getElementById(s.col3).innerHTML = h;
+    return;
+  }
+
+  // Default: InjecAgent / ASB / AgentDojo format with step timeline
+  let headerLabel;
+  if (benchId === 'agentdojo_utility') {
+    headerLabel = c[2] ? 'Preserved' : 'Regression';
+  } else {
+    headerLabel = c[2] ? 'Blocked' : 'Allowed';
+  }
+  const header = '<div class="miller-col-header">' + c[0] + ' \u2014 ' + headerLabel + '</div>';
+  document.getElementById(s.col3).innerHTML = header;
+  let h = '';
+  c[3].forEach((step, i) => {
+    const ok = step[2], cls = ok ? 'ok' : 'no';
+    h += '<div class="mc-step"><div class="mc-step-header">';
+    h += '<div class="mc-step-num ' + cls + '">' + (i+1) + '</div>';
+    h += '<div style="flex:1;min-width:0"><div class="mc-step-tool">' + step[0] + '</div><div class="mc-step-action">' + step[1] + '</div></div>';
+    h += '<div class="mc-step-badge" style="color:var(--' + (ok ? 'gn' : 'rd') + ')">' + stepLabel(ok, s[1] || step[1] || '') + '</div>';
+    h += '</div>';
+    if (step[3]) {
+      h += '<div class="mc-conds">';
+      step[3].forEach((v, ci) => {
+        h += '<div class="mc-cond ' + (v ? 'pass' : 'fail') + '" data-tip="' + CL[CK[ci]] + '">' + CK[ci] + ' ' + (v ? '\u2713' : '\u2717') + '</div>';
+      });
+      h += '</div>';
+    }
+    h += '</div>';
+  });
+  document.getElementById(s.col3).innerHTML = header + h;
+}
+
+// ── Col 1 renderer (categories) ──
+const CAT_DISPLAY = {
+  'data_stealing/Financial Data': 'Financial Data',
+  'data_stealing/Physical Data': 'Physical Data',
+  'data_stealing/Others': 'Others',
+  'direct_harm/Data Security Harm': 'Data Security',
+  'direct_harm/Financial Harm': 'Financial',
+  'direct_harm/Physical Harm': 'Physical',
+};
+const INJEC_GROUPS = {
+  'Data Stealing': ['data_stealing/Financial Data','data_stealing/Physical Data','data_stealing/Others'],
+  'Direct Harm': ['direct_harm/Data Security Harm','direct_harm/Financial Harm','direct_harm/Physical Harm'],
+};
+
+const DELEG_DISPLAY = {
+  'scope_escalation': 'Scope Escalation',
+  'budget_exhaustion': 'Budget Exhaustion',
+  'composition_across_hops': 'Composition Across Hops',
+  'blast_radius': 'Blast Radius',
+  'identity_context': 'Identity & Context',
+  'deep_chain': 'Deep Chain',
+  'cross_domain': 'Cross Domain',
+  'sensitivity_escalation': 'Sensitivity Escalation',
+  'expired_envelope': 'Expired Envelope',
+  'approval_binding': 'Approval Binding',
+  'evidence_sink': 'Evidence Sink',
+  'intent_binding': 'Intent Binding',
+  'k_tuple_cross_hop': 'K-Tuple Cross Hop',
+  'identity_at_depth': 'Identity at Depth',
+  'context_edge_cases': 'Context Edge Cases',
+  'evidence_edge_cases': 'Evidence Edge Cases',
+  'composition_edge_cases': 'Composition Edge Cases',
+  'scope_narrowing': 'Scope Narrowing',
+  'conjunctive_predicate': 'Conjunctive Predicate',
+  'multi_condition': 'Multi-Condition',
+};
+
+function renderCol1For(benchId) {
+  const data = BENCH_DATA[benchId];
+  const s = state[benchId];
+  let h = '<div class="miller-col-header">Categories</div>';
+
+  if (benchId === 'injecagent') {
+    for (const [group, keys] of Object.entries(INJEC_GROUPS)) {
+      h += '<div style="padding:6px 14px 3px;font:600 8px var(--mono);color:var(--g300);text-transform:uppercase;letter-spacing:.4px">' + group + '</div>';
+      for (const key of keys) {
+        const cases = data[key], t = cases.length, b = cases.filter(c=>c[2]).length;
+        const cls = s.cat === key ? ' active' : '';
+        h += '<div class="mc-cat' + cls + '" onclick="onCatClick(\'' + benchId + '\',\'' + key + '\')">';
+        h += '<span class="mc-cat-name">' + CAT_DISPLAY[key] + '</span>';
+        h += '<span class="mc-cat-count" style="display:flex;align-items:center;gap:5px">' + donut(b,t,20) + b + '/' + t + '</span>';
+        h += '</div>';
+      }
+    }
+  } else {
+    for (const [key, cases] of Object.entries(data)) {
+      if (!Array.isArray(cases)) {
+        // ASB: cases is an object like {blocked, total, asr}
+        const t = cases.total || 0, b = cases.blocked || 0;
+        const cls = s.cat === key ? ' active' : '';
+        h += '<div class="mc-cat' + cls + '" onclick="onCatClick(\'' + benchId + '\',\'' + key + '\')">';
+        h += '<span class="mc-cat-name">' + key + '</span>';
+        h += '<span class="mc-cat-count" style="display:flex;align-items:center;gap:5px">' + (t ? donut(b,t,20) + b + '/' + t : '') + '</span>';
+        h += '</div>';
+        continue;
+      }
+      const t = cases.length, b = cases.filter(c=>c[2]).length;
+      const cls = s.cat === key ? ' active' : '';
+      const displayName = (benchId === 'delegation' && DELEG_DISPLAY[key]) ? DELEG_DISPLAY[key] : key;
+      h += '<div class="mc-cat' + cls + '" onclick="onCatClick(\'' + benchId + '\',\'' + key.replace(/'/g, "\\'") + '\')">';
+      h += '<span class="mc-cat-name">' + displayName + '</span>';
+      h += '<span class="mc-cat-count" style="display:flex;align-items:center;gap:5px">' + donut(b,t,20) + b + '/' + t + '</span>';
+      h += '</div>';
+    }
+  }
+  document.getElementById(s.col1).innerHTML = h;
+}
+
+renderCol1For('injecagent');
+renderCol1For('asb');
+renderCol1For('agentdojo_utility');
+renderCol1For('agentdojo_compromised');
+renderCol1For('adaptive');
+renderCol1For('delegation');
+</script>
+</body>
+</html>

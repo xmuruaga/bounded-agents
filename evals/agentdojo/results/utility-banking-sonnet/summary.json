@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "condition": "baseline",
+    "suite": "banking",
+    "model": "eu.anthropic.claude-sonnet-4-6",
+    "n_tasks": 16,
+    "n_injections": 9,
+    "total_runs": 144,
+    "upr": 0.6944444444444444,
+    "asr": 0.0
+  },
+  "apc-strict": {
+    "condition": "apc-strict",
+    "suite": "banking",
+    "model": "eu.anthropic.claude-sonnet-4-6",
+    "n_tasks": 16,
+    "n_injections": 9,
+    "total_runs": 144,
+    "upr": 0.5,
+    "asr": 0.0
+  },
+  "apc-approved": {
+    "condition": "apc-approved",
+    "suite": "banking",
+    "model": "eu.anthropic.claude-sonnet-4-6",
+    "n_tasks": 16,
+    "n_injections": 9,
+    "total_runs": 144,
+    "upr": 0.5902777777777778,
+    "asr": 0.0
+  }
+}

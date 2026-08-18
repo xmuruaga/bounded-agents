@@ -1,0 +1,53 @@
+{
+  "APC": {
+    "total": 1054,
+    "blocked": 746,
+    "asr": 0.2922201138519924,
+    "breakdown": {
+      "data_stealing": {
+        "total": 544,
+        "blocked": 544,
+        "asr": 0.0
+      },
+      "direct_harm": {
+        "total": 510,
+        "blocked": 202,
+        "asr": 0.6039215686274509
+      }
+    }
+  },
+  "SEAgent": {
+    "total": 1054,
+    "blocked": 743,
+    "asr": 0.29506641366223907,
+    "breakdown": {
+      "data_stealing": {
+        "total": 544,
+        "blocked": 535,
+        "asr": 0.016544117647058824
+      },
+      "direct_harm": {
+        "total": 510,
+        "blocked": 208,
+        "asr": 0.592156862745098
+      }
+    }
+  },
+  "Progent": {
+    "total": 1054,
+    "blocked": 1054,
+    "asr": 0.0,
+    "breakdown": {
+      "data_stealing": {
+        "total": 544,
+        "blocked": 544,
+        "asr": 0.0
+      },
+      "direct_harm": {
+        "total": 510,
+        "blocked": 510,
+        "asr": 0.0
+      }
+    }
+  }
+}

@@ -1,0 +1,39 @@
+cff-version: 1.2.0
+message: "If you use this software or reference this work, please cite the paper below."
+title: "Bounded Agents: Delegation Security for Multi-Agent AI Systems"
+abstract: >-
+  Reference implementation and evaluation artifact for the Agentic Principal
+  Chain (APC): a delegation-security model in which authority narrows
+  monotonically at every hop and every proposed action must satisfy six
+  conjunctive admissibility conditions evaluated over session history.
+authors:
+  - family-names: "Muruaga"
+    given-names: "Xabier"
+    email: "xabier@muruaga.ai"
+    affiliation: "Independent Researcher"
+version: "1.0.0"
+date-released: "2026-08-18"
+license: Apache-2.0
+repository-code: "https://github.com/xmuruaga/bounded-agents"
+url: "https://arxiv.org/abs/2608.15888"
+keywords:
+  - agentic-ai
+  - ai-security
+  - authorization
+  - delegation
+  - multi-agent-systems
+  - prompt-injection
+  - zero-trust
+preferred-citation:
+  type: article
+  title: "Bounded Agents: Delegation Security for Multi-Agent AI Systems"
+  authors:
+    - family-names: "Muruaga"
+      given-names: "Xabier"
+  year: 2026
+  journal: "arXiv preprint"
+  identifiers:
+    - type: other
+      value: "arXiv:2608.15888"
+      description: "arXiv identifier"
+  url: "https://arxiv.org/abs/2608.15888"

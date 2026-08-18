@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apc-reference-implementation"
+version = "1.0.0"
+description = "Bounded Agents: Delegation Security for Multi-Agent AI Systems — Reference Implementation"
+readme = "README.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.11"
+authors = [{name = "Xabier Muruaga", email = "xabier@muruaga.ai"}]
+keywords = ["agentic-ai", "security", "authorization", "delegation", "zero-trust"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Topic :: Security",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/xmuruaga/bounded-agents"
+Repository = "https://github.com/xmuruaga/bounded-agents"
+Paper = "https://arxiv.org/abs/2608.15888"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0"]
+lint = ["ruff>=0.4.0", "mypy>=1.10"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["apc*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP"]
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true

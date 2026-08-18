@@ -1,0 +1,68 @@
+{
+  "protocol": {
+    "suite": "workspace",
+    "model_alias": "sonnet",
+    "model_id": "eu.anthropic.claude-sonnet-4-6",
+    "runs": 2,
+    "conditions": [
+      "baseline",
+      "apc-approved"
+    ],
+    "timestamp": "20260421_043637",
+    "apc_git_commit": "omitted",
+    "agentdojo_version": "v1.2.2",
+    "note": "per-condition checkpoints; paper results use baseline+apc-approved"
+  },
+  "run_summary": {
+    "baseline": {
+      "successful": 2,
+      "requested": 2,
+      "failed": 0
+    },
+    "apc-approved": {
+      "successful": 2,
+      "requested": 2,
+      "failed": 0
+    }
+  },
+  "aggregated": {
+    "baseline": {
+      "n": 2,
+      "upr_mean": 0.9633928571428572,
+      "upr_std": 0.001262690680690259,
+      "upr_min": 0.9625,
+      "upr_max": 0.9642857142857143,
+      "asr_mean": 0.0017857142857142857,
+      "asr_std": 0.0,
+      "asr_min": 0.0017857142857142857,
+      "asr_max": 0.0017857142857142857,
+      "raw_uprs": [
+        0.9625,
+        0.9642857142857143
+      ],
+      "raw_asrs": [
+        0.0017857142857142857,
+        0.0017857142857142857
+      ]
+    },
+    "apc-approved": {
+      "n": 2,
+      "upr_mean": 0.8696428571428572,
+      "upr_std": 0.0,
+      "upr_min": 0.8696428571428572,
+      "upr_max": 0.8696428571428572,
+      "asr_mean": 0.0,
+      "asr_std": 0.0,
+      "asr_min": 0.0,
+      "asr_max": 0.0,
+      "raw_uprs": [
+        0.8696428571428572,
+        0.8696428571428572
+      ],
+      "raw_asrs": [
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

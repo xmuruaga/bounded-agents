@@ -1,0 +1,163 @@
+"""Agentic Principal Chain (APC) — Reference Implementation."""
+
+from apc.core import (
+    AuthorizationEnvelope,
+    CompositionPair,
+    CompositionSequence,
+    DelegationBudgetSpec,
+    EnvelopeSealedError,
+    ExecutionRole,
+    Principal,
+    ResourceBlastProfile,
+    Scope,
+    SENSITIVITY_ORDER,
+    blast_radius_max,
+    glob_match,
+    resource_matches,
+    verify_blast_radius_monotonicity,
+)
+from apc.pdp import (
+    AdmissibilityDecision,
+    ConditionResult,
+    EvidenceIntegrityResult,
+    EvidenceSink,
+    EvidenceSinkBackend,
+    PolicyDecisionPoint,
+    ProposedAction,
+    RateLimiter,
+    RateLimitResult,
+    RevocationRegistry,
+)
+from apc.budget import ActionCost, BudgetBackend, BudgetCheckResult, BudgetState
+from apc.approval import (
+    ApprovalStatus,
+    ApprovalStore,
+    ApprovalToken,
+    TokenValidation,
+    compute_action_hash,
+)
+from apc.compose import (
+    ActionClassMapping,
+    CompositionCheckResult,
+    CompositionChecker,
+    KTupleRestriction,
+    RestrictionTemplate,
+    compile_templates,
+)
+from apc.intent import (
+    IntentCheckResult,
+    IntentChecker,
+    IntentEnforcementMode,
+    IntentSpec,
+)
+from apc.calibrate import (
+    ActionProfile,
+    ElicitationResult,
+    ImpactWeights,
+    IncidentRecord,
+    SensitivityResult,
+    ThresholdAnalysis,
+    bayesian_estimate,
+    elicit_weights,
+    kendall_tau,
+    sensitivity_analysis,
+)
+from apc.logging import (
+    APCLogger,
+    SecurityEvent,
+    SecurityLogEntry,
+    apc_logger,
+)
+from apc.parameters import (
+    AllowlistRule,
+    DenyPatternRule,
+    DenylistRule,
+    MaxLengthRule,
+    ParameterPolicy,
+    ParameterValidationResult,
+    ParameterValidator,
+    RangeRule,
+    RuleResult,
+    TypeRule,
+    ValidationRule,
+)
+
+__all__ = [
+    # core
+    "AuthorizationEnvelope",
+    "CompositionPair",
+    "CompositionSequence",
+    "DelegationBudgetSpec",
+    "EnvelopeSealedError",
+    "ExecutionRole",
+    "Principal",
+    "ResourceBlastProfile",
+    "Scope",
+    "SENSITIVITY_ORDER",
+    "blast_radius_max",
+    "glob_match",
+    "resource_matches",
+    "verify_blast_radius_monotonicity",
+    # pdp
+    "AdmissibilityDecision",
+    "ConditionResult",
+    "EvidenceIntegrityResult",
+    "EvidenceSink",
+    "EvidenceSinkBackend",
+    "PolicyDecisionPoint",
+    "ProposedAction",
+    "RateLimiter",
+    "RateLimitResult",
+    "RevocationRegistry",
+    # budget
+    "ActionCost",
+    "BudgetBackend",
+    "BudgetCheckResult",
+    "BudgetState",
+    # approval
+    "ApprovalStatus",
+    "ApprovalStore",
+    "ApprovalToken",
+    "TokenValidation",
+    "compute_action_hash",
+    # compose
+    "ActionClassMapping",
+    "CompositionCheckResult",
+    "CompositionChecker",
+    "KTupleRestriction",
+    "RestrictionTemplate",
+    "compile_templates",
+    # intent
+    "IntentCheckResult",
+    "IntentChecker",
+    "IntentEnforcementMode",
+    "IntentSpec",
+    # calibrate
+    "ActionProfile",
+    "ElicitationResult",
+    "ImpactWeights",
+    "IncidentRecord",
+    "SensitivityResult",
+    "ThresholdAnalysis",
+    "bayesian_estimate",
+    "elicit_weights",
+    "kendall_tau",
+    "sensitivity_analysis",
+    # logging
+    "APCLogger",
+    "SecurityEvent",
+    "SecurityLogEntry",
+    "apc_logger",
+    # parameters
+    "AllowlistRule",
+    "DenyPatternRule",
+    "DenylistRule",
+    "MaxLengthRule",
+    "ParameterPolicy",
+    "ParameterValidationResult",
+    "ParameterValidator",
+    "RangeRule",
+    "RuleResult",
+    "TypeRule",
+    "ValidationRule",
+]

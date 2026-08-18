@@ -1,0 +1,22 @@
+{
+  "compromised-no-apc": {
+    "condition": "compromised-no-apc",
+    "suite": "travel",
+    "model": "eu.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "n_tasks": 20,
+    "n_injections": 6,
+    "total_runs": 120,
+    "upr": 0.06666666666666667,
+    "asr": 0.8833333333333333
+  },
+  "compromised-apc": {
+    "condition": "compromised-apc",
+    "suite": "travel",
+    "model": "eu.anthropic.claude-haiku-4-5-20251001-v1:0",
+    "n_tasks": 20,
+    "n_injections": 6,
+    "total_runs": 120,
+    "upr": 0.0,
+    "asr": 0.0
+  }
+}

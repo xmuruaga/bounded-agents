@@ -1,0 +1,48 @@
+{
+  "injecagent": {
+    "APC": {
+      "asr": 0.2922201138519924,
+      "blocked": 746,
+      "total": 1054,
+      "ds_asr": 0.0,
+      "dh_asr": 0.6039215686274509
+    },
+    "SEAgent": {
+      "asr": 0.29506641366223907,
+      "blocked": 743,
+      "total": 1054,
+      "ds_asr": 0.016544117647058824,
+      "dh_asr": 0.592156862745098
+    },
+    "Progent": {
+      "asr": 0.0,
+      "blocked": 1054,
+      "total": 1054,
+      "ds_asr": 0.0,
+      "dh_asr": 0.0
+    }
+  },
+  "asb": {
+    "APC": {
+      "asr": 0.15,
+      "blocked": 340,
+      "total": 400,
+      "stealthy_asr": 0.3,
+      "disruptive_asr": 0.0
+    },
+    "SEAgent": {
+      "asr": 0.6,
+      "blocked": 160,
+      "total": 400,
+      "stealthy_asr": 0.6,
+      "disruptive_asr": 0.6
+    },
+    "Progent": {
+      "asr": 0.0,
+      "blocked": 400,
+      "total": 400,
+      "stealthy_asr": 0.0,
+      "disruptive_asr": 0.0
+    }
+  }
+}

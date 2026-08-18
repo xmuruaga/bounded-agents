@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v7
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install
+        run: python -m pip install --upgrade pip && pip install -e ".[dev]"
+
+      - name: Run test suite
+        run: pytest -q
+
+      - name: Executable specification
+        run: python scripts/demo.py
+
+  reproduce:
+    name: Reproduce paper numbers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install
+        run: python -m pip install --upgrade pip && pip install -e ".[dev]"
+
+      # No API keys required: these harnesses are fully deterministic.
+      - name: Deterministic evaluation harnesses
+        run: |
+          python evals/delegation/run_delegation.py
+          python evals/adaptive/run_adaptive.py
+          python evals/injecagent/run_injecagent.py
+          python evals/asb/run_asb.py
+
+      - name: Cross-check every paper number against result files
+        run: python scripts/verify_numbers.py
+
+      # The deterministic harnesses must regenerate the committed artifacts
+      # byte for byte. Verified identical on Linux and Windows.
+      - name: Assert committed artifacts are byte-reproducible
+        run: |
+          if git diff --quiet -- evals/; then
+            echo "Regenerated artifacts are byte-identical to the committed results."
+          else
+            echo "::error::Regenerated artifacts differ from the committed results:"
+            git diff --stat -- evals/
+            exit 1
+          fi

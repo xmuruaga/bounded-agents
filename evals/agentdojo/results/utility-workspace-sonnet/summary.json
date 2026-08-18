@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "condition": "baseline",
+    "suite": "workspace",
+    "model": "eu.anthropic.claude-sonnet-4-6",
+    "n_tasks": 40,
+    "n_injections": 14,
+    "total_runs": 560,
+    "upr": 0.9607142857142857,
+    "asr": 0.0017857142857142857
+  },
+  "apc-strict": {
+    "condition": "apc-strict",
+    "suite": "workspace",
+    "model": "eu.anthropic.claude-sonnet-4-6",
+    "n_tasks": 40,
+    "n_injections": 14,
+    "total_runs": 560,
+    "upr": 0.8142857142857143,
+    "asr": 0.0
+  },
+  "apc-approved": {
+    "condition": "apc-approved",
+    "suite": "workspace",
+    "model": "eu.anthropic.claude-sonnet-4-6",
+    "n_tasks": 40,
+    "n_injections": 14,
+    "total_runs": 560,
+    "upr": 0.8678571428571429,
+    "asr": 0.0
+  }
+}

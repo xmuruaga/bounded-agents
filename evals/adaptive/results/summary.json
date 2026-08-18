@@ -1,0 +1,16 @@
+{
+  "baseline": {
+    "label": "Baseline (no APC)",
+    "total": 23,
+    "blocked": 0,
+    "asr": 1.0
+  },
+  "apc_complete": {
+    "label": "APC-Complete",
+    "total_attacks": 23,
+    "blocked": 23,
+    "asr": 0.0,
+    "total_variants": 43,
+    "variants_blocked": 24
+  }
+}

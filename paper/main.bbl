@@ -1,0 +1,395 @@
+%%% -*-BibTeX-*-
+%%% Do NOT edit. File created by BibTeX with style
+%%% ACM-Reference-Format-Journals [18-Jan-2012].
+
+\begin{thebibliography}{33}
+
+%%% ====================================================================
+%%% NOTE TO THE USER: you can override these defaults by providing
+%%% customized versions of any of these macros before the \bibliography
+%%% command.  Each of them MUST provide its own final punctuation,
+%%% except for \shownote{} and \showURL{}.  The latter two
+%%% do not use final punctuation, in order to avoid confusing it with
+%%% the Web address.
+%%%
+%%% To suppress output of a particular field, define its macro to expand
+%%% to an empty string, or better, \unskip, like this:
+%%%
+%%% \newcommand{\showURL}[1]{\unskip}   % LaTeX syntax
+%%%
+%%% \def \showURL #1{\unskip}           % plain TeX syntax
+%%%
+%%% ====================================================================
+
+\ifx \showCODEN    \undefined \def \showCODEN     #1{\unskip}     \fi
+\ifx \showISBNx    \undefined \def \showISBNx     #1{\unskip}     \fi
+\ifx \showISBNxiii \undefined \def \showISBNxiii  #1{\unskip}     \fi
+\ifx \showISSN     \undefined \def \showISSN      #1{\unskip}     \fi
+\ifx \showLCCN     \undefined \def \showLCCN      #1{\unskip}     \fi
+\ifx \shownote     \undefined \def \shownote      #1{#1}          \fi
+\ifx \showarticletitle \undefined \def \showarticletitle #1{#1}   \fi
+\ifx \showURL      \undefined \def \showURL       {\relax}        \fi
+% The following commands are used for tagged output and should be
+% invisible to TeX
+\providecommand\bibfield[2]{#2}
+\providecommand\bibinfo[2]{#2}
+\providecommand\natexlab[1]{#1}
+\providecommand\showeprint[2][]{arXiv:#2}
+
+\bibitem[{AIUC Consortium}(2025)]%
+        {aiuc2025}
+\bibfield{author}{\bibinfo{person}{{AIUC Consortium}}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{{AIUC-1}: Security, Safety, and Reliability Standard
+  for {AI} Agents}.
+\newblock
+
+
+\bibitem[Balunovic et~al\mbox{.}(2024)]%
+        {balunovic2024formal}
+\bibfield{author}{\bibinfo{person}{Mislav Balunovic} {et~al\mbox{.}}}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{AI} Agents with Formal Security Guarantees}. In
+  \bibinfo{booktitle}{\emph{ICML Next Generation of AI Safety Workshop}}.
+\newblock
+
+
+\bibitem[{Cloud Security Alliance}(2025)]%
+        {csamaestro2025}
+\bibfield{author}{\bibinfo{person}{{Cloud Security Alliance}}.}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \bibinfo{title}{{MAESTRO}: Multi-Agent Environment, Security, Threat,
+  Risk, and Outcome}.
+\newblock
+
+
+\bibitem[Debenedetti et~al\mbox{.}(2024)]%
+        {debenedetti2024}
+\bibfield{author}{\bibinfo{person}{Edoardo Debenedetti} {et~al\mbox{.}}}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{AgentDojo}: A Dynamic Environment to Evaluate
+  Attacks and Defenses for {LLM} Agents}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2406.13352}}
+  (\bibinfo{year}{2024}).
+\newblock
+
+
+\bibitem[Debenedetti et~al\mbox{.}(2025)]%
+        {debenedetti2025camel}
+\bibfield{author}{\bibinfo{person}{Edoardo Debenedetti} {et~al\mbox{.}}}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{Defeating Prompt Injections by Design}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2503.18813}}
+  (\bibinfo{year}{2025}).
+\newblock
+
+
+\bibitem[Denning(1976)]%
+        {denning1976}
+\bibfield{author}{\bibinfo{person}{Dorothy~E. Denning}.}
+  \bibinfo{year}{1976}\natexlab{}.
+\newblock \showarticletitle{A Lattice Model of Secure Information Flow}.
+\newblock \bibinfo{journal}{\emph{Commun. ACM}} \bibinfo{volume}{19},
+  \bibinfo{number}{5} (\bibinfo{year}{1976}), \bibinfo{pages}{236--243}.
+\newblock
+
+
+\bibitem[Dennis and Van~Horn(1966)]%
+        {dennis1966}
+\bibfield{author}{\bibinfo{person}{Jack~B. Dennis} {and}
+  \bibinfo{person}{Earl~C. Van~Horn}.} \bibinfo{year}{1966}\natexlab{}.
+\newblock \showarticletitle{Programming Semantics for Multiprogrammed
+  Computations}.
+\newblock \bibinfo{journal}{\emph{Commun. ACM}} \bibinfo{volume}{9},
+  \bibinfo{number}{3} (\bibinfo{year}{1966}), \bibinfo{pages}{143--155}.
+\newblock
+
+
+\bibitem[Dziemian et~al\mbox{.}(2026)]%
+        {grayswan2026}
+\bibfield{author}{\bibinfo{person}{M. Dziemian} {et~al\mbox{.}}}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{How Vulnerable Are {AI} Agents to Indirect Prompt
+  Injections? Insights from a Large-Scale Public Competition}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2603.15714}}
+  (\bibinfo{year}{2026}).
+\newblock
+
+
+\bibitem[Ellison et~al\mbox{.}(1999)]%
+        {ellison1999}
+\bibfield{author}{\bibinfo{person}{Carl Ellison}, \bibinfo{person}{Bill
+  Frantz}, \bibinfo{person}{Butler Lampson}, \bibinfo{person}{Ron Rivest},
+  \bibinfo{person}{Brian Thomas}, {and} \bibinfo{person}{Tatu Ylonen}.}
+  \bibinfo{year}{1999}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{{SPKI} Certificate Theory}}.
+\newblock \bibinfo{type}{{T}echnical {R}eport} RFC 2693.
+  \bibinfo{institution}{Internet Engineering Task Force}.
+\newblock
+
+
+\bibitem[Hu et~al\mbox{.}(2014)]%
+        {hu2014}
+\bibfield{author}{\bibinfo{person}{Vincent~C. Hu} {et~al\mbox{.}}}
+  \bibinfo{year}{2014}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Guide to Attribute Based Access Control
+  ({ABAC}) Definition and Considerations}}.
+\newblock \bibinfo{type}{{T}echnical {R}eport} NIST SP 800-162.
+  \bibinfo{institution}{National Institute of Standards and Technology}.
+\newblock
+
+
+\bibitem[Ji et~al\mbox{.}(2026)]%
+        {ji2026seagent}
+\bibfield{author}{\bibinfo{person}{Zimo Ji}, \bibinfo{person}{Daoyuan Wu},
+  \bibinfo{person}{Wenyuan Jiang}, \bibinfo{person}{Pingchuan Ma},
+  \bibinfo{person}{Zongjie Li}, \bibinfo{person}{Yudong Gao},
+  \bibinfo{person}{Shuai Wang}, {and} \bibinfo{person}{Yingjiu Li}.}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Taming Various Privilege Escalation in {LLM}-Based
+  Agent Systems: A Mandatory Access Control Framework}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2601.11893}}
+  (\bibinfo{year}{2026}).
+\newblock
+
+
+\bibitem[Jones et~al\mbox{.}(2020)]%
+        {rfc8693}
+\bibfield{author}{\bibinfo{person}{Michael~B. Jones}, \bibinfo{person}{Anthony
+  Nadalin}, \bibinfo{person}{Brian Campbell}, \bibinfo{person}{John Bradley},
+  {and} \bibinfo{person}{Chuck Mortimore}.} \bibinfo{year}{2020}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{{OAuth} 2.0 Token Exchange}}.
+\newblock \bibinfo{type}{{T}echnical {R}eport} RFC 8693.
+  \bibinfo{institution}{Internet Engineering Task Force}.
+\newblock
+
+
+\bibitem[Khoo et~al\mbox{.}(2025)]%
+        {khoo2025}
+\bibfield{author}{\bibinfo{person}{Shaun Khoo} {et~al\mbox{.}}}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{With Great Capabilities Come Great
+  Responsibilities: Introducing the Agentic Risk \& Capability ({ARC})
+  Framework for Governing Agentic {AI} Systems}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2512.22211}}
+  (\bibinfo{year}{2025}).
+\newblock
+
+
+\bibitem[Korgul et~al\mbox{.}(2025)]%
+        {trap2025}
+\bibfield{author}{\bibinfo{person}{Karolina Korgul} {et~al\mbox{.}}}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{It's a {TRAP}! Task-Redirecting Agent Persuasion
+  Benchmark for Web Agents}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2512.23128}}
+  (\bibinfo{year}{2025}).
+\newblock
+
+
+\bibitem[Lodderstedt et~al\mbox{.}(2023)]%
+        {rfc9396}
+\bibfield{author}{\bibinfo{person}{Torsten Lodderstedt},
+  \bibinfo{person}{Justin Richer}, {and} \bibinfo{person}{Brian Campbell}.}
+  \bibinfo{year}{2023}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{{OAuth} 2.0 Rich Authorization Requests}}.
+\newblock \bibinfo{type}{{T}echnical {R}eport} RFC 9396.
+  \bibinfo{institution}{Internet Engineering Task Force}.
+\newblock
+
+
+\bibitem[Madkour et~al\mbox{.}(2026)]%
+        {madkour2026}
+\bibfield{author}{\bibinfo{person}{Nada Madkour} {et~al\mbox{.}}}
+  \bibinfo{year}{2026}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Agentic {AI} Risk-Management Standards
+  Profile}}.
+\newblock \bibinfo{type}{{T}echnical {R}eport}.
+  \bibinfo{institution}{University of California, Berkeley}.
+\newblock
+
+
+\bibitem[Miller(2006)]%
+        {miller2006}
+\bibfield{author}{\bibinfo{person}{Mark~S. Miller}.}
+  \bibinfo{year}{2006}\natexlab{}.
+\newblock \emph{\bibinfo{title}{Robust Composition: Towards a Unified Approach
+  to Access Control and Concurrency Control}}.
+\newblock \bibinfo{thesistype}{Ph.\,D. Dissertation}. \bibinfo{school}{Johns
+  Hopkins University}.
+\newblock
+
+
+\bibitem[Myers and Liskov(1997)]%
+        {myersliskov1997}
+\bibfield{author}{\bibinfo{person}{Andrew~C. Myers} {and}
+  \bibinfo{person}{Barbara Liskov}.} \bibinfo{year}{1997}\natexlab{}.
+\newblock \showarticletitle{A Decentralized Model for Information Flow
+  Control}. In \bibinfo{booktitle}{\emph{ACM Symposium on Operating Systems
+  Principles (SOSP)}}.
+\newblock
+
+
+\bibitem[Myers and Liskov(2000)]%
+        {myersliskov2000}
+\bibfield{author}{\bibinfo{person}{Andrew~C. Myers} {and}
+  \bibinfo{person}{Barbara Liskov}.} \bibinfo{year}{2000}\natexlab{}.
+\newblock \showarticletitle{Protecting Privacy Using the Decentralized Label
+  Model}.
+\newblock \bibinfo{journal}{\emph{ACM Transactions on Software Engineering and
+  Methodology}} \bibinfo{volume}{9}, \bibinfo{number}{4}
+  (\bibinfo{year}{2000}), \bibinfo{pages}{410--442}.
+\newblock
+
+
+\bibitem[{OWASP Foundation}(2025a)]%
+        {owaspmaestro2025}
+\bibfield{author}{\bibinfo{person}{{OWASP Foundation}}.}
+  \bibinfo{year}{2025}\natexlab{a}.
+\newblock \bibinfo{title}{Multi-Agentic System ({MAS}) Threat Modelling Guide}.
+\newblock
+
+
+\bibitem[{OWASP Foundation}(2025b)]%
+        {owaspagentic2025}
+\bibfield{author}{\bibinfo{person}{{OWASP Foundation}}.}
+  \bibinfo{year}{2025}\natexlab{b}.
+\newblock \bibinfo{title}{{OWASP} Top 10 for Agentic Applications}.
+\newblock
+
+
+\bibitem[{OWASP Foundation}(2025c)]%
+        {owaspllm2025}
+\bibfield{author}{\bibinfo{person}{{OWASP Foundation}}.}
+  \bibinfo{year}{2025}\natexlab{c}.
+\newblock \bibinfo{title}{{OWASP} Top 10 for {LLM} Applications, v2025}.
+\newblock
+
+
+\bibitem[Pang et~al\mbox{.}(2019)]%
+        {pang2019}
+\bibfield{author}{\bibinfo{person}{Ruoming Pang} {et~al\mbox{.}}}
+  \bibinfo{year}{2019}\natexlab{}.
+\newblock \showarticletitle{{Zanzibar}: Google's Consistent, Global
+  Authorization System}. In \bibinfo{booktitle}{\emph{USENIX Annual Technical
+  Conference (ATC)}}.
+\newblock
+
+
+\bibitem[Rajagopalan and Rao(2026)]%
+        {rajagopalan2026authenticated}
+\bibfield{author}{\bibinfo{person}{M. Rajagopalan} {and} \bibinfo{person}{V.
+  Rao}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Authenticated Workflows: A Systems Approach to
+  Protecting Agentic {AI}}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2602.10465}}
+  (\bibinfo{year}{2026}).
+\newblock
+
+
+\bibitem[Rose et~al\mbox{.}(2020)]%
+        {nist800207}
+\bibfield{author}{\bibinfo{person}{Scott Rose}, \bibinfo{person}{Oliver
+  Borchert}, \bibinfo{person}{Stu Mitchell}, {and} \bibinfo{person}{Sean
+  Connelly}.} \bibinfo{year}{2020}\natexlab{}.
+\newblock \bibinfo{booktitle}{\emph{Zero Trust Architecture}}.
+\newblock \bibinfo{type}{{T}echnical {R}eport} NIST SP 800-207.
+  \bibinfo{institution}{National Institute of Standards and Technology}.
+\newblock
+
+
+\bibitem[Ruan et~al\mbox{.}(2024)]%
+        {ruan2024}
+\bibfield{author}{\bibinfo{person}{Yangjun Ruan} {et~al\mbox{.}}}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Identifying the Risks of {LM} Agents with an
+  {LM}-Emulated Sandbox}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2309.15817}}
+  (\bibinfo{year}{2024}).
+\newblock
+
+
+\bibitem[Sandhu et~al\mbox{.}(1996)]%
+        {sandhu1996}
+\bibfield{author}{\bibinfo{person}{Ravi~S. Sandhu}, \bibinfo{person}{Edward~J.
+  Coyne}, \bibinfo{person}{Hal~L. Feinstein}, {and} \bibinfo{person}{Charles~E.
+  Youman}.} \bibinfo{year}{1996}\natexlab{}.
+\newblock \showarticletitle{Role-Based Access Control Models}.
+\newblock \bibinfo{journal}{\emph{IEEE Computer}} \bibinfo{volume}{29},
+  \bibinfo{number}{2} (\bibinfo{year}{1996}), \bibinfo{pages}{38--47}.
+\newblock
+
+
+\bibitem[Shi et~al\mbox{.}(2025)]%
+        {shi2025progent}
+\bibfield{author}{\bibinfo{person}{Tianneng Shi} {et~al\mbox{.}}}
+  \bibinfo{year}{2025}\natexlab{}.
+\newblock \showarticletitle{{Progent}: Securing {AI} Agents with Privilege
+  Control}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2504.11703}}
+  (\bibinfo{year}{2025}).
+\newblock
+\shownote{arXiv v3, revised May 2026; our evaluation used the earlier
+  artifact}.
+\newblock
+
+
+\bibitem[South et~al\mbox{.}(2025a)]%
+        {south2025}
+\bibfield{author}{\bibinfo{person}{Tobin South} {et~al\mbox{.}}}
+  \bibinfo{year}{2025}\natexlab{a}.
+\newblock \showarticletitle{Authenticated Delegation and Authorized {AI}
+  Agents}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2501.09674}}
+  (\bibinfo{year}{2025}).
+\newblock
+
+
+\bibitem[South et~al\mbox{.}(2025b)]%
+        {south2025b}
+\bibfield{author}{\bibinfo{person}{Tobin South} {et~al\mbox{.}}}
+  \bibinfo{year}{2025}\natexlab{b}.
+\newblock \showarticletitle{Identity Management for Agentic {AI}}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2510.25819}}
+  (\bibinfo{year}{2025}).
+\newblock
+
+
+\bibitem[Zhan et~al\mbox{.}(2024)]%
+        {zhan2024injecagent}
+\bibfield{author}{\bibinfo{person}{Qiusi Zhan} {et~al\mbox{.}}}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{{InjecAgent}: Benchmarking Indirect Prompt
+  Injections in Tool-Integrated Large Language Model Agents}. In
+  \bibinfo{booktitle}{\emph{Findings of the Association for Computational
+  Linguistics (ACL)}}.
+\newblock
+
+
+\bibitem[Zhang et~al\mbox{.}(2024)]%
+        {zhang2024asb}
+\bibfield{author}{\bibinfo{person}{Hanrong Zhang} {et~al\mbox{.}}}
+  \bibinfo{year}{2024}\natexlab{}.
+\newblock \showarticletitle{Agent Security Bench ({ASB}): Formalizing and
+  Benchmarking Attacks and Defenses in {LLM}-Based Agents}.
+\newblock \bibinfo{journal}{\emph{arXiv preprint arXiv:2410.02644}}
+  (\bibinfo{year}{2024}).
+\newblock
+
+
+\bibitem[Zhu et~al\mbox{.}(2026)]%
+        {hou2024}
+\bibfield{author}{\bibinfo{person}{Yuxuan Zhu}, \bibinfo{person}{Antony
+  Kellermann}, \bibinfo{person}{Akul Gupta}, \bibinfo{person}{Philip Li},
+  \bibinfo{person}{Richard Fang}, \bibinfo{person}{Rohan Bindu}, {and}
+  \bibinfo{person}{Daniel Kang}.} \bibinfo{year}{2026}\natexlab{}.
+\newblock \showarticletitle{Teams of {LLM} Agents Can Exploit Zero-Day
+  Vulnerabilities}. In \bibinfo{booktitle}{\emph{Proceedings of the Conference
+  of the European Chapter of the Association for Computational Linguistics
+  (EACL)}}.
+\newblock
+\shownote{arXiv:2406.01637}.
+\newblock
+
+
+\end{thebibliography}

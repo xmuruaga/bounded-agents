@@ -1,0 +1,26 @@
+__pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.coverage
+dist/
+build/
+*.egg
+.venv/
+.env
+
+# Editor configs
+.vscode/
+.idea/
+
+# LaTeX build artifacts (leak local toolchain paths; regenerate with pdflatex)
+*.aux
+*.log
+*.blg
+*.out
+*.synctex.gz
+*.fls
+*.fdb_latexmk
+*.toc
+*.lof
+*.lot

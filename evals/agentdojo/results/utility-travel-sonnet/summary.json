@@ -1,0 +1,32 @@
+{
+  "baseline": {
+    "condition": "baseline",
+    "suite": "travel",
+    "model": "eu.anthropic.claude-sonnet-4-6",
+    "n_tasks": 20,
+    "n_injections": 7,
+    "total_runs": 140,
+    "upr": 0.6,
+    "asr": 0.007142857142857143
+  },
+  "apc-strict": {
+    "condition": "apc-strict",
+    "suite": "travel",
+    "model": "eu.anthropic.claude-sonnet-4-6",
+    "n_tasks": 20,
+    "n_injections": 7,
+    "total_runs": 140,
+    "upr": 0.5642857142857143,
+    "asr": 0.007142857142857143
+  },
+  "apc-approved": {
+    "condition": "apc-approved",
+    "suite": "travel",
+    "model": "eu.anthropic.claude-sonnet-4-6",
+    "n_tasks": 20,
+    "n_injections": 7,
+    "total_runs": 140,
+    "upr": 0.5857142857142857,
+    "asr": 0.007142857142857143
+  }
+}

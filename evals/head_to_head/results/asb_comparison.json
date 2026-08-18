@@ -1,0 +1,53 @@
+{
+  "APC": {
+    "total": 400,
+    "blocked": 340,
+    "asr": 0.15,
+    "breakdown": {
+      "stealthy": {
+        "total": 200,
+        "blocked": 140,
+        "asr": 0.3
+      },
+      "disruptive": {
+        "total": 200,
+        "blocked": 200,
+        "asr": 0.0
+      }
+    }
+  },
+  "SEAgent": {
+    "total": 400,
+    "blocked": 160,
+    "asr": 0.6,
+    "breakdown": {
+      "stealthy": {
+        "total": 200,
+        "blocked": 80,
+        "asr": 0.6
+      },
+      "disruptive": {
+        "total": 200,
+        "blocked": 80,
+        "asr": 0.6
+      }
+    }
+  },
+  "Progent": {
+    "total": 400,
+    "blocked": 400,
+    "asr": 0.0,
+    "breakdown": {
+      "stealthy": {
+        "total": 200,
+        "blocked": 200,
+        "asr": 0.0
+      },
+      "disruptive": {
+        "total": 200,
+        "blocked": 200,
+        "asr": 0.0
+      }
+    }
+  }
+}

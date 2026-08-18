@@ -1,0 +1,30 @@
+# Requirements for running the evaluation suite
+# Core library has zero runtime dependencies (see pyproject.toml)
+# These are needed only for the AgentDojo live-LLM evaluations
+
+# AgentDojo benchmark framework
+agentdojo==0.2.0
+
+# AWS Bedrock (Claude models used in paper: Sonnet 4.6 for utility, Haiku 4.5 for compromised)
+boto3==1.34.144
+botocore==1.34.144
+
+# Anthropic direct API (alternative to Bedrock)
+anthropic==0.30.1
+
+# Environment variable loading for API keys
+python-dotenv==1.0.1
+
+# Numerical / stats (used in calibrate.py and result analysis)
+numpy==1.26.4
+scipy==1.13.1
+
+# Live-LLM evaluations (require Bedrock credentials):
+#   python evals/agentdojo/run_multirun2.py    (utility, 4 suites)
+#   python evals/agentdojo/run_compromised.py  (compromised-model, 4 suites)
+#
+# Deterministic evaluations (no LLM, no extra deps beyond the core library):
+#   python evals/injecagent/run_injecagent.py
+#   python evals/asb/run_asb.py
+#   python evals/adaptive/run_adaptive.py
+#   python evals/delegation/run_delegation.py
