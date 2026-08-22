@@ -9,6 +9,7 @@ abstract: >-
 authors:
   - family-names: "Muruaga"
     given-names: "Xabier"
+    orcid: "https://orcid.org/0009-0006-1972-000X"
     email: "xabier@muruaga.ai"
     affiliation: "Independent Researcher"
     website: "https://muruaga.ai"
@@ -31,6 +32,7 @@ preferred-citation:
   authors:
     - family-names: "Muruaga"
       given-names: "Xabier"
+      orcid: "https://orcid.org/0009-0006-1972-000X"
   year: 2026
   journal: "arXiv preprint"
   identifiers:
