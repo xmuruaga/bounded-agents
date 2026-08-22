@@ -11,6 +11,7 @@ authors:
     given-names: "Xabier"
     email: "xabier@muruaga.ai"
     affiliation: "Independent Researcher"
+    website: "https://muruaga.ai"
 version: "1.0.0"
 date-released: "2026-08-18"
 license: Apache-2.0
