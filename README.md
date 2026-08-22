@@ -14,7 +14,7 @@
 
 This repository contains the reference implementation and evaluation artifact for the paper *Bounded Agents: Delegation Security for Multi-Agent AI Systems* ([arXiv:2608.15888](https://arxiv.org/abs/2608.15888)).
 
-📄 **[Paper on arXiv](https://arxiv.org/abs/2608.15888)** · **[PDF in this repo](paper/bounded-agents.pdf)** · **[LaTeX source](paper/main.tex)**
+📄 **[Paper on arXiv](https://arxiv.org/abs/2608.15888)** · **[PDF in this repo](paper/bounded-agents.pdf)** · **[LaTeX source](paper/main.tex)** · **[Author's page](https://muruaga.ai/bounded-agents)**
 
 `paper/bounded-agents.pdf` is the official arXiv-stamped PDF of v1, byte-for-byte as served by arXiv. `paper/main.tex` and `paper/references.bib` are the LaTeX source submitted for that version.
 
